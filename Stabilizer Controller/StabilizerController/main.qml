@@ -51,22 +51,10 @@ ApplicationWindow {
         }
     }
 
-    Column {
-        anchors.fill: parent
-
-        ItemDelegate {
-            text: qsTr("Page 1")
-            width: parent.width
-            onClicked: {
-                // stackView.push("Page1Form.ui.qml")
-                // drawer.close()
-            }
-        }
-    }
-
     StackView {
         id: stackView
 
         anchors.fill: parent
+
     }
 }

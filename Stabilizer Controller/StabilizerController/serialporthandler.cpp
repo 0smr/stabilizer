@@ -86,7 +86,8 @@ void serialPortHandler::bluetoothDeviceFound(const QBluetoothDeviceInfo &bDevice
 void serialPortHandler::parseValue(QString input)
 {
     input.remove("\r\n");
-    QStringList strList = input.split(':',QString::SplitBehavior::SkipEmptyParts);
+
+    QStringList strList = input.split(':',Qt::SplitBehavior(Qt::SplitBehaviorFlags::SkipEmptyParts));
 
     int operationCode = strList[0].toInt();
 

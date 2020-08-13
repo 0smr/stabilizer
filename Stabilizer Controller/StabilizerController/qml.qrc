@@ -7,5 +7,7 @@
         <file>controls/IconButton.qml</file>
         <file>views/About.qml</file>
         <file>controls/CustomDial.qml</file>
+        <file>views/Settings.qml</file>
+        <file>views/Main.qml</file>
     </qresource>
 </RCC>
