@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>controls/CustomCheckBox.qml</file>
+        <file>controls/HambergerToggle.qml</file>
+        <file>controls/IconButton.qml</file>
+        <file>views/About.qml</file>
+        <file>controls/CustomDial.qml</file>
+    </qresource>
+</RCC>
