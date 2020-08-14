@@ -11,9 +11,7 @@ ApplicationWindow {
 
     width: 340
     height: 580
-    title: qsTr("Stack")
-
-    color: 'red'
+    title: qsTr("Stabilizer Controller")
 
     header: Rectangle {
 
@@ -30,6 +28,7 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
                 Layout.leftMargin: 5
             }
+
             Rectangle {
 
                 Layout.fillWidth: true
@@ -51,10 +50,20 @@ ApplicationWindow {
         }
     }
 
+    Main {
+        id: mainPage
+
+        CustomDialHandle{
+            anchors.centerIn: parent
+            width: window.width
+            height: width
+        }
+    }
+
     StackView {
         id: stackView
 
+        initialItem: mainPage
         anchors.fill: parent
-
     }
 }
