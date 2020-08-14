@@ -3,10 +3,10 @@ import QtQuick.Controls 2.12
 
 CheckBox {
     id: control
-    text: qsTr("CheckBox")
+    text: qsTr('CheckBox')
     checked: true
 
-    property var color: 'gray'
+    property var color: '#bb4dff' // custom color.
     property var textColor: 'gray'
 
     indicator: Rectangle {

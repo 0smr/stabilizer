@@ -8,7 +8,7 @@ Rectangle {
     property alias text: icon.text
     property alias fontFamily: icon.font.family
     property alias toolTip: toolTip
-    property var mainColor: 'orange'
+    property var mainColor: '#bb4dff'
 
     property bool press: false
     property bool hover: false

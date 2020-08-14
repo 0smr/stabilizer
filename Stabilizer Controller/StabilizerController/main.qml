@@ -53,7 +53,7 @@ ApplicationWindow {
     Main {
         id: mainPage
 
-        CustomDialHandle{
+        CustomDial{
             anchors.centerIn: parent
             width: window.width
             height: width

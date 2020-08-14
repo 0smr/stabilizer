@@ -4,7 +4,7 @@ Rectangle {
     id: control
 
     property real barHeight: control.height * 0.15
-    property var barColor: 'orange';
+    property var barColor: '#bb4dff';
     property var explicitBarColor: enabled ?
                                hover ? Qt.lighter(barColor,1.2) : barColor : 'gray'
 
