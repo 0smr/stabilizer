@@ -1,14 +1,12 @@
 import QtQuick 2.0
 
-Rectangle {
+Item {
     id: control
 
     property real barHeight: control.height * 0.15
-    property var barColor: '#bb4dff';
-    property var explicitBarColor: enabled ?
-                               hover ? Qt.lighter(barColor,1.2) : barColor : 'gray'
-
-
+    property var color: '#bb4dff';
+    property var explicitColor: enabled ? color :
+                                          hover ? Qt.lighter(color,1.2) :  'gray'
 
     property alias press: mouseArea.pressed
     property bool hover: false
@@ -16,11 +14,12 @@ Rectangle {
     signal hovered();
     signal pressed();
 
-    width: 50
-    height: width
+    width: height * 1.1
+    height: 150
 
-    color: 'transparent'
-    state: 'menu'
+    opacity: enabled ? 1 : 0.6
+
+    state: hover ?  'close': 'menu'
 
     states: [
         State {
@@ -76,43 +75,50 @@ Rectangle {
     ]
 
     transitions: Transition {
-            NumberAnimation {
-                properties: 'x,y,rotation,width';
-            }
+        NumberAnimation {
+            properties: 'x,y,rotation,width';
+        }
+    }
+    Item {
+        anchors {
+            fill: parent
+            topMargin: (control.height - bottom.y - control.barHeight) /2
         }
 
-    Rectangle {
-        id: top
-        y: 0.03
+        Rectangle {
+            id: top
+            y: 0.03
 
-        width: control.width
-        height: control.barHeight
+            width: control.width
+            height: control.barHeight
 
-        color: parent.explicitBarColor
-        radius: height/2
-    }
+            color: control.explicitColor
+            radius: height/2
+        }
 
-    Rectangle {
-        id: middle
-        y: control.height * 0.33
+        Rectangle {
+            id: middle
+            y: control.height * 0.33
 
-        width: control.width
-        height: control.barHeight
-        opacity: 1
+            width: control.width
+            height: control.barHeight
+            opacity: 1
 
-        color: parent.explicitBarColor
-        radius: height/2
-    }
+            color: control.explicitColor
+            radius: height/2
+        }
 
-    Rectangle {
-        id: bottom
-        y: control.height * 0.66
+        Rectangle {
+            id: bottom
+            y: control.height * 0.66
 
-        width: control.width
-        height: control.barHeight
+            width: control.width
+            height: control.barHeight
 
-        color: control.explicitBarColor
-        radius: height/2
+            color: control.explicitColor
+            radius: height/2
+        }
+
     }
 
     MouseArea {

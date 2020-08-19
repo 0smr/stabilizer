@@ -1,54 +1,70 @@
 import QtQuick 2.0
+import QtGraphicalEffects 1.15
+import QtQuick.Controls.Material 2.12
 
 Item {
     id: control
-    anchors.fill: parent
 
     property var color: 'purple'
+    property real angle: 0
 
     onColorChanged: {
         canvas.requestPaint();
     }
 
+    onAngleChanged: {
+        canvas.requestPaint();
+    }
+
     Canvas {
         id: canvas
+
+        property real radianAngle: control.angle * 0.0186
+                            // 140 * Math.PI * 140/180
         anchors.fill: parent
         antialiasing: true
         smooth: true
 
         onPaint: {
             var ctx = canvas.getContext('2d');
-            var r = canvas.width/2 - 20;
+            var radius = canvas.width/2 - 20;
             ctx.reset();
 
-            ctx.stroke();
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
             ctx.lineCap = 'round';
-
-            for(var i = Math.PI * 3/4 ; i <= Math.PI * 9/4  ; i+=0.2) {
-
-                var xPos = r * Math.cos(i) + canvas.width/2;
-                var yPos = r * Math.sin(i) + canvas.height/2;
-                var diff = 5 - 2* Math.abs(Math.PI * 1.5 - i);
-
-                ctx.moveTo(xPos, yPos);
-                ctx.arc(xPos, yPos, diff, 0, 2 * Math.PI);
-            }
-
-            var gradient = ctx.createLinearGradient(canvas.width/2, canvas.height/2 -r, canvas.width/2, canvas.height/2+r);
-
-            control.color.a = 1;
-            gradient.addColorStop('0', control.color);
-            control.color.a = 0.5;
-            gradient.addColorStop('0.65', control.color);
-            control.color.a = 0;
-            gradient.addColorStop('1.0', control.color);
-
-            ctx.strokeStyle = gradient;
-            ctx.fillStyle = gradient;
-
+            ctx.arc(width/2,height/2 , radius , -Math.PI/2 , radianAngle-Math.PI/2 , radianAngle <= 0);
+            var grd = context.createLinearGradient(canvas.width /2 , 0, canvas.width / 2 , canvas.height);
+            grd.addColorStop(0, control.color);
+            grd.addColorStop(1, '#2bedff');
+            ctx.strokeStyle = grd;
             ctx.stroke();
-            ctx.fill();
         }
+    }
+
+    Rectangle {
+        id: handle
+        x: control.width/2 - width/2
+        y: control.height/2 - (canvas.width/2 - 30)
+
+        width: 2
+        height: 10
+
+        radius: width/2
+        color: control.color
+
+        transform:
+            Rotation {
+                angle: control.angle * 1.08
+                origin{
+                    y: canvas.width/2 - 30
+                    x: handle.width/2
+                }
+            }
+    }
+
+    FastBlur{
+        anchors.fill: canvas
+        source: canvas
+        radius: 20
     }
 }

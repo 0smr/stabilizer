@@ -1,6 +1,9 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.12
+
+import io.stabilizer.serialPort 1.0
 
 import 'controls'
 import 'views'
@@ -9,43 +12,73 @@ ApplicationWindow {
     id: window
     visible: true
 
-    width: 340
-    height: 580
+    width: 240
+    height: 480
     title: qsTr("Stabilizer Controller")
 
-    header: Rectangle {
+    //Material.theme: Material.Dark
+    Material.primary: Material.theme == Material.Dark ? 'Grey' : 'white'
 
-        height: 30
+    header: ToolBar {
+        Material.elevation: 1
+
         width: window.width
+        height: 35
 
         RowLayout {
             anchors.fill: parent
 
             HambergerToggle {
                 id: toolToggleButton
-                width: parent.height - 5
+                enabled: false
 
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
+                height: parent.height *0.7
                 Layout.leftMargin: 5
+
+                color: Material.accent
             }
 
-            Rectangle {
-
+            Item {
                 Layout.fillWidth: true
+                Layout.fillHeight: true
             }
 
-            IconButton {
-                id: aboutButton
-                text: '\uefe2'
-                height: parent.height
-                width: height
-            }
-
-            IconButton {
+            Button {
                 id: toolButton
+                text: '\uefe2'
+                font.family: 'IcoFont'
+                font.pixelSize: parent.height * 0.6
+                enabled: false
+
+                Material.background: 'Transparent'
+                Material.foreground: Material.accent
+                Material.elevation: 1
+                Layout.preferredHeight: parent.height
+                Layout.preferredWidth: parent.height
+            }
+
+            Button {
+                id: aboutButton
+
                 text: '\uef19'
-                height: parent.height
-                width: height
+                font.family: 'IcoFont'
+                font.pixelSize: parent.height * 0.6
+                enabled: false
+
+                Material.background: 'Transparent'
+                Material.foreground: Material.accent
+                Material.elevation: 1
+
+                Layout.preferredHeight: parent.height
+                Layout.preferredWidth: parent.height
+                Layout.rightMargin: 5
+
+                ToolTip.text: "about"
+
+                onClicked: {
+                    if(stackView.depth <= 1)
+                        stackView.push("views/About.qml")
+                }
             }
         }
     }
@@ -53,10 +86,16 @@ ApplicationWindow {
     Main {
         id: mainPage
 
-        CustomDial{
-            anchors.centerIn: parent
-            width: window.width
-            height: width
+//        serialPortAPI: SerialPort{
+//        }
+        Timer{
+            id:timer
+            interval: 50
+            running: false
+            repeat: false
+            onTriggered: {
+                serialPort.setYawValue(Math.floor(parent.value))
+            }
         }
     }
 
