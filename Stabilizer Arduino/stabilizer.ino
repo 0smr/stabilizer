@@ -4,25 +4,40 @@
 
 #include <stdarg.h>
 
-#include "opCode.h"
-#include "statusLED.h"
+#include "opcode.h"
+#include "statusled.h"
+#include "stabilizer.h"
 
 #define BLUETOOTH_MODE_SERIAL
-
+/**
+ * \brief global pin variables..	   
+ * \a BOTTOM_SERVO_PIN             = 9
+ * \a MIDDLE_SERVO_PIN             = 10
+ * \a FRONT_SERVO_PIN              = 11
+ * \a JSTICK_YAW_PIN               = A0
+ * \a JSTICK_PITCH_PIN             = A1
+ * \a RESET_POS_PIN                = 3
+ */
 constexpr auto BOTTOM_SERVO_PIN = 9;
 constexpr auto MIDDLE_SERVO_PIN = 10;
 constexpr auto FRONT_SERVO_PIN = 11;
 constexpr auto JSTICK_YAW_PIN = A0;
 constexpr auto JSTICK_PITCH_PIN = A1;
 constexpr auto RESET_POS_PIN = 3;
+/// middle point (just for servo)
+// TODO : change servo with gearbox motor. (this variable will be removed).
 constexpr auto MID_POINT = 90;
 
-double pitchMidPoint = MID_POINT,
-        yawMidPoint = MID_POINT,
-       rollMidPoint = MID_POINT;
+double  pitchMidPoint   = MID_POINT,
+        yawMidPoint     = MID_POINT,
+        rollMidPoint    = MID_POINT;
 
 const int MPU = 0x68; // MPU6050 I2C address
 
+/**
+ * \brief status LED pins:
+ * * 4 5 6 7 8
+ */
 statusLED SLED(4,5,6,7,8);
 
 Servo yDirection, xDirection, zDirection;
@@ -35,53 +50,9 @@ float lastRoll, lastPitch, lastYaw;
 float AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ;
 float elapsedTime, currentTime, previousTime;
 
-void sendOpCode(const opCode &oc,const String &arg)
-{
-    Serial.println('c' + String(oc) + "-" +arg);
-}
-void sendOpCode(const opCode& oc,const char * formatter,...)
-{
-    va_list valist;
-    char seprator = ':';
-    int size = strlen(formatter);
-    va_start(valist, size);
-    String data = 'o' + String(oc);
-    
-    for (int i = 0; i < size; i++) 
-    {
-                data += seprator;
-        switch(formatter[i])
-        {
-            case 'i':
-                data += va_arg(valist, int);
-            break;
-            case 's':
-                data += va_arg(valist, const char *);
-            break;
-            case 'S':
-                data += va_arg(valist, String);
-            break;
-            case 'c':
-                data += static_cast<char>(va_arg(valist, int));
-            break;
-            case 'd':
-                data += va_arg(valist, double);
-            break;
-        }
-    }
-    va_end(valist);
-
-    Serial.println(data);
-}
-void sendOpCode(opCode oc)
-{
-    Serial.println(String('o') + oc);
-}
-
-void sendErrorCode(const errorCode &ec)
-{
-    Serial.println(String('e') + ec);
-}
+void sendOpCode(const OpCode oc);
+void sendOpCode(const OpCode operationCode,const String &commandString);
+void sendOpCode(const OpCode oc,const char * formatter,...);
 
 void calculate_IMU_error();
 void resetHandlers();
@@ -99,21 +70,23 @@ void setup() {
     SLED.setStatus(0x01);
     Serial.begin(9600);
 
-    sendOpCode(opCode::DEBUG_MODE,"s","device started");
+    sendOpCode(OpCode::DEBUG_MODE,"s","device started");
 
-    Wire.begin();                      // Initialize comunication
+    Wire.begin();                      // Initialize communication
     Wire.beginTransmission(MPU);       // Start communication with MPU6050 // MPU=0x68
     Wire.write(0x6B);                  // Talk to the register 6B
     Wire.write(0x00);                  // Make reset - place a 0 into the 6B register
     Wire.endTransmission(true);        // end the transmission
 
     /*
-    // Configure Accelerometer Sensitivity - Full Scale Range (default +/- 2g)
+    * unused code (configure ACCEL):
+    * Configure Accelerometer Sensitivity - Full Scale Range (default +/- 2g)
     Wire.beginTransmission(MPU);
     Wire.write(0x1C);                  //Talk to the ACCEL_CONFIG register (1C hex)
     Wire.write(0x10);                  //Set the register bits as 00010000 (+/- 8g full scale range)
     Wire.endTransmission(true);
-    // Configure Gyro Sensitivity - Full Scale Range (default +/- 250deg/s)
+    * unused code (configure GYRO):
+    * Configure Gyro Sensitivity - Full Scale Range (default +/- 250deg/s)
     Wire.beginTransmission(MPU);
     Wire.write(0x1B);                   // Talk to the GYRO_CONFIG register (1B hex)
     Wire.write(0x10);                   // Set the register bits as 00010000 (1000deg/s full scale)
@@ -121,8 +94,8 @@ void setup() {
     delay(20);
     */
 #ifndef BLUETOOTH_MODE_SERIAL
-    sendOpCode(opCode::MESSAGE,"s","begin c_imu_func\n");
-#endif // !BLUETOOTH_MODE_SERIAL
+    sendOpCode(OpCode::MESSAGE,"s","begin c_imu_func\n");
+#endif // * !BLUETOOTH_MODE_SERIAL
     //initializeDevice();
     delay(20);
     SLED.setStatus(0b00000011);
@@ -139,18 +112,23 @@ void setup() {
         yDirection.write(MID_POINT + i * 3);
         zDirection.write(MID_POINT + i * 3);
 
-        sendOpCode(opCode::DEBUG_MODE,"sis","test motors on",MID_POINT + i * 3,"degree");
+        sendOpCode(OpCode::DEBUG_MODE,"sis","test motors on",MID_POINT + i * 3,"degree");
         delay(500); //wait for servo to test
     }
     SLED.setStatus(0b00011111);
     SLED.blinkALL(50, 5);
 
-    pinMode(RESET_POS_PIN,INPUT);
+    
+    
+    /**
+     * this line of code enable reset mode and attach it to resetHandlers
+     */
+    //pinMode(RESET_POS_PIN,INPUT);
     //attachInterrupt(digitalPinToInterrupt(RESET_POS_PIN), resetHandlers, CHANGE);
 }
 
 void loop() {
-    // === Read acceleromter data === //
+    // === Read accelerometer data === //
     Wire.beginTransmission(MPU);
     Wire.write(0x3B); // Start with register 0x3B (ACCEL_XOUT_H)
     Wire.endTransmission(false);
@@ -194,9 +172,9 @@ void loop() {
     }
 #elif 1
     // Print the values on the serial monitor
-    sendOpCode(opCode::PITCH_DEGREE,"i",pitch);
-    sendOpCode(opCode::ROLL_DEGREE,"i",roll);
-    sendOpCode(opCode::YAW_DEGREE,"i",yaw);
+    sendOpCode(OpCode::PITCH_DEGREE,"i",pitch);
+    sendOpCode(OpCode::ROLL_DEGREE,"i",roll);
+    sendOpCode(OpCode::YAW_DEGREE,"i",yaw);
 #endif // BLUETOOTH_MODE_SERIAL
 
     if (lastRoll != roll || lastPitch != pitch || lastYaw != yaw)
@@ -238,10 +216,15 @@ void loop() {
         }
     }
 #if !defined(BLUETOOTH_MODE_SERIAL) && 0
-    sendOpCode(opCode::MESSAGE,"isisi",pButton," ",yButton," ",digitalRead(RESET_POS_PIN));
-#endif // !BLUETOOTH_MODE_SERIAL
+    sendOpCode(OpCode::MESSAGE,"isisi",pButton," ",yButton," ",digitalRead(RESET_POS_PIN));
+#endif // * !BLUETOOTH_MODE_SERIAL
 }
 
+/**
+ * \brief calculate_IMU_error
+ * this function calculate IMU error and set to \a AccErrorX and \a AccErrorY for ACCEL
+ * and GYRO error set to \a GyroErrorX , \a GyroErrorY and \a GyroErrorZ .
+ */
 void calculate_IMU_error() {
     int c = 0;
     // Note that you should place the IMU flat in order to get the proper values, so that you then can the correct values
@@ -288,15 +271,16 @@ void calculate_IMU_error() {
     // Print the error values on the Serial Monitor
 
 #if !defined(BLUETOOTH_MODE_SERIAL) && 0
-    sendOpCode(opCode::ACC_ERROR_DATA,"ff",AccErrorX,AccErrorY);
-    sendOpCode(opCode::GYRO_ERROR_DATA,"fff",GyroErrorX,GyroErrorY,GyroErrorZ);
+    sendOpCode(OpCode::ACC_ERROR_DATA,"ff",AccErrorX,AccErrorY);
+    sendOpCode(OpCode::GYRO_ERROR_DATA,"fff",GyroErrorX,GyroErrorY,GyroErrorZ);
 #endif
 }
+
 void collibrate()
 {
     calculate_IMU_error();
     //
-    //some other codes ***************88
+    //some other codes ***************
     //
     saveDataToEEPROM();
 }
@@ -304,10 +288,13 @@ void collibrate()
 //save error data to EEPROM (AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ)
 constexpr int dataSize = sizeof(float);
 constexpr int dataShift = 1;
-
+/**
+ * \brief saveDataToEEPROM
+ * this function save ACCEL and GYRO data to epprom.
+ */
 void saveDataToEEPROM()
 {
-    //true means data saved atleast one time.
+    //true means data saved at least one time.
     EEPROM.write(0, 0x1);
     EEPROM.put(0x0 * dataSize + dataShift, AccErrorX);
     EEPROM.put(0x1 * dataSize + dataShift, AccErrorY);
@@ -329,57 +316,19 @@ void initializeDevice()
     }
     else if (EEPROM.read(0) == 0x1) //send error code
     {
-        sendErrorCode(errorCode::EMPTY_EEPROM);
+        sendOpCode(OpCode::EMPTY_EEPROM);
         collibrate();
     }
     else
     {
-        sendErrorCode(errorCode::INVALID_EEPROM);
+        sendOpCode(OpCode::INVALID_EEPROM);
     }
 }
-
-//parse comming COM serial data.
-void parseCommand(const String &command)
-{
-    int seprator = command.indexOf(':');
-    int operationCode = command.substring(0,seprator).toInt();
-
-    sendOpCode(opCode::MESSAGE,"iS",operationCode,command);
-    switch (operationCode)
-    {
-        
-    case opCode::MOVE_PITCH_MID:
-    {
-        pitchMidPoint = static_cast<double>(command.substring(seprator+1,command.indexOf(';')).toInt()) +MID_POINT;
-        sendOpCode(opCode::PITCH_MID,"i",static_cast<int>(pitchMidPoint));
-        yDirection.write(pitch + pitchMidPoint);
-        break;
-    }
-
-    case opCode::MOVE_ROLL_MID: 
-    {
-        rollMidPoint = static_cast<double>(command.substring(seprator+1,command.indexOf(';')).toInt()) + MID_POINT;
-        sendOpCode(opCode::ROLL_MID,"i",static_cast<int>(rollMidPoint));
-        xDirection.write(roll + rollMidPoint);
-        SLED.setStatus(0x04);
-        break;
-    }
-
-    case opCode::MOVE_YAW_MID:
-    {
-        yawMidPoint = -static_cast<double>(command.substring(seprator+1,command.indexOf(';')).toInt()) + MID_POINT;
-        sendOpCode(opCode::YAW_MID,"i",static_cast<int>(yawMidPoint));
-        zDirection.write(-yaw + yawMidPoint);
-        break;
-    }
-    default:
-        sendErrorCode(errorCode::ERROR);
-        break;
-    }
-}
-
-// reset positions intrrupt function.
-void resetHandlers()
+/**
+ * this function reset servo motors position to \a MID_POINT and show an led status.
+ * \brief resetServoPosition
+ */
+void resetServoPosition()
 {
     pitchMidPoint = rollMidPoint = yawMidPoint = MID_POINT;
     SLED.setStatus(0b00000100);
