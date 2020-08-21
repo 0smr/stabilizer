@@ -5,8 +5,8 @@ import QtQuick.Layouts 1.12
 
 import io.stabilizer.serialPort 1.0
 
-import 'controls'
-import 'views'
+import './controls'
+import './views'
 
 ApplicationWindow {
     id: window
