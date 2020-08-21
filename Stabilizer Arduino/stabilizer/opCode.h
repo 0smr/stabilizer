@@ -5,7 +5,7 @@
 enum OpCode:uint8_t
 {
     /// operations : contain controll commands.
-    MOVE_PITCH_MID = 0x05,  /** 
+    MOVE_PITCH_MID = 0x05,  /**
                              * this command send from controller application.
                              * and means pitch motor must move with given angle.
                              * \param angle : single parameters containing a number between -90 to 90
@@ -13,11 +13,11 @@ enum OpCode:uint8_t
     MOVE_ROLL_MID,      /** same as the \a MOVE_PITCH_MID   */
     MOVE_YAW_MID,       /** same as the \a MOVE_PITCH_MID   */
     RESET_PITCH_MID,    /// reset just pitch mid    (no parameters)
-    RESET_ROLL_MID,     /// reset just roll mid     (no parameters) 
+    RESET_ROLL_MID,     /// reset just roll mid     (no parameters)
     RESET_YAW_MID,      /// reset just yaw mid      (no parameters)
     PATH_WITH_SPEED,    /*!
                         * this command send by controller application and contain 6 parameters
-                        * \param midDist : distention 
+                        * \param midDist : distention
                         */
     PITCH_MID,          /** get \a PITCH_MID value (no parameters)       */
     ROLL_MID,           /** get \a ROLL_MID value (no parameters)        */
@@ -25,13 +25,13 @@ enum OpCode:uint8_t
     PITCH_ANGLE,        /** get \a PITCH_ANGLE value (no parameters)     */
     ROLL_ANGLE,         /** get \a ROLL_ANGLE value (no parameters)      */
     YAW_ANGLE,          /** get \a YAW_ANGLE value (no parameters)       */
-    
+
     /// settings:
     CALIBRATE_STABILIZER = 0x20,
                             /**
                              * call calibration function.
                              * it take some seconds to calibrate
-                             */ 
+                             */
     GET_ERROR_DATA,         /** get data from GYRO and ACCEL error data and send to controller application. */
     GET_EEPROM_DATA,        /** get data from eeprom data and send to controller application. */
     GET_CURRENT_ANGLE,      /** get */
@@ -49,15 +49,15 @@ enum OpCode:uint8_t
     INVALID_EEPROM,         /// an error rise when data in eeprom is invalid (can be fetermined ).
     INVALID_GYRO,
     INVALID_SERIAL_COM,    /// an error rise when data that came from serial COM is invalid.
-    INVALID_INPUT,          /// 
+    INVALID_INPUT,          ///
 
     /// system code.
     OK = 0xf0,              // send a message from/to controller to verify command correctness
     MESSAGE,                /**
                              * a command that followed by single parameter.
-                             * \param message : an string containing a message from/to controller application. 
+                             * \param message : an string containing a message from/to controller application.
                              */
-    DEBUG_MODE,             /// switch micro to debug mode, so debug message sends over serial COM. 
+    DEBUG_MODE,             /// switch micro to debug mode, so debug message sends over serial COM.
 };
 
 #endif // * !OPCODE

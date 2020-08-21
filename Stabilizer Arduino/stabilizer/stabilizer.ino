@@ -8,6 +8,8 @@
 #include "statusled.h"
 #include "stabilizer.h"
 
+#define size_t unsigned long long
+
 #define BLUETOOTH_MODE_SERIAL
 /**
  * \brief global pin variables..	   
@@ -50,20 +52,12 @@ float lastRoll, lastPitch, lastYaw;
 float AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ;
 float elapsedTime, currentTime, previousTime;
 
-void sendOpCode(const OpCode oc);
-void sendOpCode(const OpCode operationCode,const String &commandString);
-void sendOpCode(const OpCode oc,const char * formatter,...);
-
 void calculate_IMU_error();
 void resetHandlers();
 void collibrate();
 void saveDataToEEPROM();
 void initializeDevice();
 void parseCommand(const String &);
-void split()
-{
-
-}
 
 void setup() {
     SLED.blinkALL(100, 2);
@@ -78,20 +72,20 @@ void setup() {
     Wire.write(0x00);                  // Make reset - place a 0 into the 6B register
     Wire.endTransmission(true);        // end the transmission
 
-    /*
-    * unused code (configure ACCEL):
+    /**
+    ! unused code (configure ACCEL):
     * Configure Accelerometer Sensitivity - Full Scale Range (default +/- 2g)
-    Wire.beginTransmission(MPU);
-    Wire.write(0x1C);                  //Talk to the ACCEL_CONFIG register (1C hex)
-    Wire.write(0x10);                  //Set the register bits as 00010000 (+/- 8g full scale range)
-    Wire.endTransmission(true);
-    * unused code (configure GYRO):
+    * Wire.beginTransmission(MPU);
+    * Wire.write(0x1C);                  //Talk to the ACCEL_CONFIG register (1C hex)
+    * Wire.write(0x10);                  //Set the register bits as 00010000 (+/- 8g full scale range)
+    * Wire.endTransmission(true);
+    ! unused code (configure GYRO):
     * Configure Gyro Sensitivity - Full Scale Range (default +/- 250deg/s)
-    Wire.beginTransmission(MPU);
-    Wire.write(0x1B);                   // Talk to the GYRO_CONFIG register (1B hex)
-    Wire.write(0x10);                   // Set the register bits as 00010000 (1000deg/s full scale)
-    Wire.endTransmission(true);
-    delay(20);
+    * Wire.beginTransmission(MPU);
+    * Wire.write(0x1B);                   // Talk to the GYRO_CONFIG register (1B hex)
+    * Wire.write(0x10);                   // Set the register bits as 00010000 (1000deg/s full scale)
+    * Wire.endTransmission(true);
+    * delay(20);
     */
 #ifndef BLUETOOTH_MODE_SERIAL
     sendOpCode(OpCode::MESSAGE,"s","begin c_imu_func\n");
@@ -112,13 +106,11 @@ void setup() {
         yDirection.write(MID_POINT + i * 3);
         zDirection.write(MID_POINT + i * 3);
 
-        sendOpCode(OpCode::DEBUG_MODE,"sis","test motors on",MID_POINT + i * 3,"degree");
+        sendOpCode(OpCode::MESSAGE,"sis","test motors on",MID_POINT + i * 3,"degree");
         delay(500); //wait for servo to test
     }
     SLED.setStatus(0b00011111);
-    SLED.blinkALL(50, 5);
-
-    
+    SLED.blinkALL(50, 5);    
     
     /**
      * this line of code enable reset mode and attach it to resetHandlers
@@ -152,15 +144,15 @@ void loop() {
     GyroY = (Wire.read() << 8 | Wire.read()) / 131.0;
     GyroZ = (Wire.read() << 8 | Wire.read()) / 131.0;
     // Correct the outputs with the calculated error values
-    GyroX = GyroX - GyroErrorX; // GyroErrorX ~(-0.56)
-    GyroY = GyroY - GyroErrorY; // GyroErrorY ~(2)
+    GyroX = GyroX - GyroErrorX; // GyroErrorX ~ (-0.56)
+    GyroY = GyroY - GyroErrorY; // GyroErrorY ~ (2)
     GyroZ = GyroZ - GyroErrorZ; // GyroErrorZ ~ (-0.8)
-    // Currently the raw values are in degrees per seconds, deg/s, so we need to multiply by sendonds (s) to get the angle in degrees
+    // Currently the raw values are in degrees per seconds, deg/s, so we need to multiply by seconds (s) to get the angle in degrees
     gyroAngleX = gyroAngleX + GyroX * elapsedTime; // deg/s * s = deg
     gyroAngleY = gyroAngleY + GyroY * elapsedTime;
 
     yaw = yaw + GyroZ * elapsedTime;
-    // Complementary filter - combine acceleromter and gyro angle values
+    // Complementary filter - combine accelerometer and gyro angle values
     roll = 0.96 * gyroAngleX + 0.04 * accAngleX;
     pitch = 0.96 * gyroAngleY + 0.04 * accAngleY;
 
@@ -191,6 +183,13 @@ void loop() {
     auto yButton = analogRead(JSTICK_YAW_PIN);
     auto pButton = analogRead(JSTICK_PITCH_PIN) ;
 
+    /**
+     * read yaw and pitch axis of joystick and set to \a yButton and \a pButton.
+     * middle number is 500 value must have at least 50 distance to 50.
+     * and it minus 500 and divide to 1200 (experimental choice).
+     * boundary angles are 0 and 180.
+     * if mid points reach boundaries, they push back by 5 degree.
+     */
     if(yButton < 450 || yButton > 550)
     {
         yawMidPoint += (yButton - 500.) / 1200.;
@@ -221,6 +220,52 @@ void loop() {
 }
 
 /**
+ * this function parse data coming from serial COM. 
+ * and send appropriate command to controller application.
+ * 
+ * \param  command {String} : 
+ *      input command is contain commands and their parameters separated with ':' and ends with ';'.
+ */
+void parseCommand(const String &command)
+{
+    int seprator = command.indexOf(':');
+    int operationCode = command.substring(0,seprator).toInt();
+
+    // * Debug : 
+    // * sendOpCode(OpCode::MESSAGE,"iS",operationCode,command);
+    switch (operationCode)
+    {
+        
+    case OpCode::MOVE_PITCH_MID:
+    {
+        pitchMidPoint = static_cast<double>(command.substring(seprator+1,command.indexOf(';')).toInt()) +MID_POINT;
+        sendOpCode(OpCode::PITCH_MID,"i",static_cast<int>(pitchMidPoint));
+        yDirection.write(pitch + pitchMidPoint);
+        break;
+    }
+
+    case OpCode::MOVE_ROLL_MID: 
+    {
+        rollMidPoint = static_cast<double>(command.substring(seprator+1,command.indexOf(';')).toInt()) + MID_POINT;
+        sendOpCode(OpCode::ROLL_MID,"i",static_cast<int>(rollMidPoint));
+        xDirection.write(roll + rollMidPoint);
+        break;
+    }
+
+    case OpCode::MOVE_YAW_MID:
+    {
+        yawMidPoint = -static_cast<double>(command.substring(seprator+1,command.indexOf(';')).toInt()) + MID_POINT;
+        sendOpCode(OpCode::YAW_MID,"i",static_cast<int>(yawMidPoint));
+        zDirection.write(-yaw + yawMidPoint);
+        break;
+    }
+    default:
+        sendOpCode(OpCode::INVALID_SERIAL_COM);
+        break;
+    }
+}
+
+/**
  * \brief calculate_IMU_error
  * this function calculate IMU error and set to \a AccErrorX and \a AccErrorY for ACCEL
  * and GYRO error set to \a GyroErrorX , \a GyroErrorY and \a GyroErrorZ .
@@ -243,7 +288,7 @@ void calculate_IMU_error() {
         c++;
     }
     SLED.setStatus(0b00000111);
-    //Divide the sum by 500 to get the error value
+    //Divide the sum by 400 to get the error value
     AccErrorX = AccErrorX / 400;
     AccErrorY = AccErrorY / 400;
     c = 0;
@@ -263,7 +308,7 @@ void calculate_IMU_error() {
         c++;
     }
     SLED.setStatus(0b00001111);
-    //Divide the sum by 200 to get the error value
+    //Divide the sum by 400 to get the error value
     GyroErrorX = GyroErrorX / 400;
     GyroErrorY = GyroErrorY / 400;
     GyroErrorZ = GyroErrorZ / 400;

@@ -1,27 +1,33 @@
 {
-    "configurations": [{
-        "name": "GCC",
-        "includePath": [
-            "C:\\Program Files (x86)\\Arduino\\**",
-            "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
-            "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\**",
-            "C:\\Program Files (x86)\\Arduino\\tools\\**",
-            "${workspaceFolder}\\**"
-        ],
-        "browse": {
-            "limitSymbolsToIncludedHeaders": true,
-            "databaseFilename": ""
+    "configurations": [
+        {
+            "name": "GCC",
+            "includePath": [
+                "C:\\Program Files (x86)\\Arduino\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\**",
+                "C:\\Program Files (x86)\\Arduino\\tools\\**",
+                "${workspaceFolder}\\**"
+            ],
+            "forcedInclude": [
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+            ],
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "C:\\MinGW\\bin\\g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "defines": [
+                "USBCON=1"
+            ]
         },
-        "forcedInclude": [
-            "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
-        ],
-        "intelliSenseMode": "gcc-x64",
-        "compilerPath": "C:\\MinGW\\bin\\g++.exe",
-        "cStandard": "c11",
-        "cppStandard": "c++11",
-        "defines": [
-            "USBCON=1"
-        ]
-    }],
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\seyye\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
+                "C:\\Users\\seyye\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.7.4\\**"
+            ],
+            "forcedInclude": []
+        }
+    ],
     "version": 4
 }
