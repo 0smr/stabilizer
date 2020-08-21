@@ -18,10 +18,20 @@ serialPortHandler::serialPortHandler()
                                           ,QBluetoothUuid(QString("00001101-0000-1000-8000-00805F9B34FB"))
                                           ,QIODevice::ReadWrite);
     mBluetoothDiscoveryAgent.start();
-
+    QString localDeviceName = "";
     if(mLocalDevice.isValid())
     {
         mLocalDevice.powerOn();
+
+        // Read local device name
+        localDeviceName = mLocalDevice.name();
+
+        // Make it visible to others
+        mLocalDevice.setHostMode(QBluetoothLocalDevice::HostDiscoverable);
+
+        // Get connected devices
+        QList<QBluetoothAddress> remotes;
+        remotes = mLocalDevice.connectedDevices();
     }
 }
 
@@ -38,8 +48,8 @@ bool serialPortHandler::connected() const
 
 void serialPortHandler::setConnected(bool connected)
 {
-    emit connectedChanged(connected);
     mConnected = connected;
+    emit connectedChanged(connected);
 }
 
 void serialPortHandler::bluetoothDeviceStateChanged(QBluetoothLocalDevice::HostMode mode)
@@ -47,6 +57,8 @@ void serialPortHandler::bluetoothDeviceStateChanged(QBluetoothLocalDevice::HostM
     if(mode == QBluetoothLocalDevice::HostConnectable
             || mode == QBluetoothLocalDevice::HostConnectable)
     {
+        mConnected = true;
+        emit connectedChanged(true);
         mBluetoothSocket.connectToService(QBluetoothAddress("00:18:E5:04:81:AD")
                                           ,QBluetoothUuid(QString("00001101-0000-1000-8000-00805F9B34FB"))
                                           ,QIODevice::ReadWrite);
@@ -93,10 +105,9 @@ void serialPortHandler::parseValue(QString input)
 
     switch (operationCode)
     {
-    case Stablizer::OpCode::MESSAGE:
+    case Stabilizer::OpCode::MESSAGE:
         qDebug() << strList.join(' ');
         break;
     }
 }
-
 

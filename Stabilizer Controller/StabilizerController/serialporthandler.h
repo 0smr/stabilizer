@@ -15,7 +15,7 @@
 
 #include "opCode.h"
 
-using Stablizer::OpCode;
+using Stabilizer::OpCode;
 
 class serialPortHandler : public QQuickItem
 {
@@ -23,7 +23,6 @@ class serialPortHandler : public QQuickItem
 public:
 
     Q_PROPERTY(bool connected READ connected WRITE setConnected NOTIFY connectedChanged)
-    Q_ENUMS(opCode)
 
     serialPortHandler();
     ~serialPortHandler();
@@ -36,7 +35,12 @@ signals:
     void log(QString);
 
 public slots:
-    void sendCommond(OpCode operationCode,QString data)
+    /*!
+     * @brief sendCommand
+     * @param operationCode
+     * @param data
+     */
+    void sendCommand(OpCode operationCode,QString data)
     {
         QString command = QString::number(operationCode) + ':';
 
@@ -60,10 +64,18 @@ public slots:
     void bluetoothDeviceStateChanged(QBluetoothLocalDevice::HostMode mode);
     void bluetoothConnected();
     /*!
-        \abstract read data into buffer
-    */
+     * @brief readyRead
+     */
     void readyRead();
+    /*!
+     * @brief errorHandler
+     * @param error
+     */
     void errorHandler(QBluetoothSocket::SocketError error);
+    /*!
+     * @brief bluetoothDeviceFound
+     * @param bDeviceInfo
+     */
     void bluetoothDeviceFound(const QBluetoothDeviceInfo & bDeviceInfo);
     void parseValue(QString input);
 
@@ -72,7 +84,21 @@ public slots:
         QString command = QString::number(OpCode::MOVE_YAW_MID) + ':' +QString::number(data) + ';';
         qDebug() << "data:" << command;
         mBluetoothSocket.write(command.toLocal8Bit());
-        mBluetoothSocket.waitForReadyRead(2000);
+        mBluetoothSocket.waitForReadyRead(50);
+    }
+    void setPitchValue(int data)
+    {
+        QString command = QString::number(OpCode::MOVE_PITCH_MID) + ':' +QString::number(data) + ';';
+        qDebug() << "data:" << command;
+        mBluetoothSocket.write(command.toLocal8Bit());
+        mBluetoothSocket.waitForReadyRead(50);
+    }
+    void setRollValue(int data)
+    {
+        QString command = QString::number(OpCode::MOVE_ROLL_MID) + ':' +QString::number(data) + ';';
+        qDebug() << "data:" << command;
+        mBluetoothSocket.write(command.toLocal8Bit());
+        mBluetoothSocket.waitForReadyRead(50);
     }
 
 private:

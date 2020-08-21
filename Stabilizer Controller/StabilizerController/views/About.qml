@@ -12,7 +12,7 @@ Item {
             width: parent.width
             spacing: 10
 
-            Rectangle{
+            Item{
                 Layout.fillWidth: true
                 height: applicationIcon.height + 8
 
@@ -30,7 +30,7 @@ Item {
                         height: width * 1.33
                         Image{
                             anchors.fill: parent
-                            source: 'qrc:/res/resources/SVG/icon_light_shadow.png'
+                           //source: 'qrc:/res/resources/SVG/icon_light_shadow.png'
                         }
                     }
 
@@ -59,10 +59,10 @@ Item {
                         Layout.alignment: Qt.AlignBottom | Qt.AlignRight
                         Layout.rightMargin: 5
                         opacity: 0.8
-                        text: qsTr(
-                                  "<a href='https://qt.io'>built with Qt</a><br>"+
-                                  "<a href='https://github.com/SMR76/persian-subtitle-fixer/blob/master/LICENSE'>Licenses</a>"
-                                  );
+//                        text: qsTr(
+//                                  "<a href='https://qt.io'>built with Qt</a><br>"+
+//                                  "<a href='https://github.com/SMR76/persian-subtitle-fixer/blob/master/LICENSE'>Licenses</a>"
+//                                  );
                         onLinkActivated: Qt.openUrlExternally(link)
                     }
                 }
@@ -81,11 +81,11 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.leftMargin: 10
-                text: qsTr("description: (see page below)<br>" +
-                           "github page: <a href='https://github.com/SMR76/persian-subtitle-fixer'>" +
-                           "SMR76/persian-subtitle-fixer</a><br>" +
-                           "version: 0.5 (2020.7.29)<br>" +
-                           "Copyright © 2020 smr76.github.io")
+//                text: qsTr("description: (see page below)<br>" +
+//                           "github page: <a href='https://github.com/SMR76/persian-subtitle-fixer'>" +
+//                           "SMR76/persian-subtitle-fixer</a><br>" +
+//                           "version: 0.5 (2020.7.29)<br>" +
+//                           "Copyright © 2020 smr76.github.io")
                 onLinkActivated: Qt.openUrlExternally(link)
             }
         }

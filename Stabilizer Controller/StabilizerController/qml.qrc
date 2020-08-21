@@ -9,6 +9,6 @@
         <file>controls/CustomDial.qml</file>
         <file>views/Settings.qml</file>
         <file>views/Main.qml</file>
-        <file>controls/CustomDialHandle.qml</file>
+        <file>controls/CustomDialindicator.qml</file>
     </qresource>
 </RCC>
