@@ -21,6 +21,7 @@ ApplicationWindow {
 
     header: ToolBar {
         Material.elevation: 1
+        visible: false
 
         width: window.width
         height: 35
@@ -86,8 +87,8 @@ ApplicationWindow {
     Main {
         id: mainPage
 
-//        serialPortAPI: SerialPort{
-//        }
+        serialPortAPI: SerialPort{
+        }
         Timer{
             id:timer
             interval: 50

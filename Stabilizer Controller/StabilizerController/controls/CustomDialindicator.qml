@@ -44,9 +44,9 @@ Item {
     Rectangle {
         id: handle
         x: control.width/2 - width/2
-        y: control.height/2 - (canvas.width/2 - 30)
+        y: control.height/2 - (canvas.width/2 - 32)
 
-        width: 2
+        width: 10
         height: 10
 
         radius: width/2
@@ -56,7 +56,7 @@ Item {
             Rotation {
                 angle: control.angle * 1.08
                 origin{
-                    y: canvas.width/2 - 30
+                    y: canvas.width/2 - 32
                     x: handle.width/2
                 }
             }

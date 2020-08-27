@@ -1,7 +1,9 @@
 import QtQuick 2.0
+import QtGraphicalEffects 1.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
+import QtQuick.Extras 1.4
 
 import io.stabilizer.opcode 1.0
 
@@ -12,11 +14,10 @@ Item {
 
     property var color: 'purple'
     property var serialPortAPI: null
+    property var pathMoveDuration: 10000
     /*
       initialized with an serial port instance.
       methods:
-
-
 
     */
 
@@ -46,12 +47,15 @@ Item {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.alignment: Qt.AlignTop
+                        snapMode: "SnapAlways"
 
                         color: Material.accent
 
                         onValueChanged: {
                             serialPortAPI.setYawValue(value);
                         }
+
+                        duration: pathMoveDuration
 
                         //enabled: serialPortAPI.connected
                     }
@@ -85,10 +89,66 @@ Item {
 
                             orientation: Qt.Vertical
                             Layout.alignment: Qt.AlignHCenter
+                            snapMode: Slider.SnapAlways
+
+                            handle.z: 1
+
+                            property real startPoint : 0
+                            property real endPoint : 0
+
+                            function setStartPoint() {
+                                startPoint = pitchController.value
+                                endPointIndicator.visible = true;
+                                endPointIndicator.visualPosition = visualPosition;
+                                endPointIndicator.appearAnim.start();
+                            }
+
+                            function setEndPoint() {
+                                endPoint = pitchController .value;
+                                endPointIndicator.visualPosition = visualPosition;
+                                endPointIndicator.appearAnim.start();
+
+                                moveToDestAnim.start()
+                            }
+
                             property var tooltip: ToolTip {
                                 parent: pitchController.handle
                                 visible: pitchController.pressed
                                 text: Math.floor(pitchController.value)
+                            }
+
+                            property var endPointIndicator: Rectangle {
+                                property real visualPosition: 0
+                                x: parent.leftPadding + parent.availableWidth / 2 - width /2
+                                y: parent.topPadding + visualPosition * (parent.availableHeight - height + 2) - 1
+                                width: 15
+                                height: width
+                                radius: width/2
+                                parent: pitchController
+                                visible: false
+                                border.color: control.Material.accent
+
+                                property var appearAnim: NumberAnimation {
+                                    target: pitchController.endPointIndicator
+                                    properties: "width"
+                                    from: 0
+                                    to: 15
+                                    duration: 200
+                                }
+                            }
+
+                            property var moveToDestAnim: NumberAnimation {
+                                target: pitchController
+                                from: pitchController.startPoint
+                                to: pitchController.endPoint
+                                property: "value"
+                                easing.type: Easing.Linear
+                                duration: control.pathMoveDuration
+
+                                onStopped: {
+                                    pitchController.endPointIndicator.visible = false;
+                                    pitchController.endPointIndicator.visualPosition = 0;
+                                }
                             }
 
                             onValueChanged: {
@@ -144,7 +204,7 @@ Item {
                         Layout.leftMargin: 5
 
                         onClicked: {
-                            rollController.value --
+                            rollController.value--
                             rollController.tooltip.show(rollController.value)
                         }
                     }
@@ -158,10 +218,64 @@ Item {
 
                         Layout.fillWidth: true
 
+                        handle.z: 1
+
+                        property real startPoint : 0
+                        property real endPoint : 0
+
+                        function setStartPoint() {
+                            startPoint = rollController.value
+                            endPointIndicator.visible = true;
+                            endPointIndicator.visualPosition = visualPosition;
+                            endPointIndicator.appearAnim.start();
+                        }
+
+                        function setEndPoint() {
+                            endPoint = rollController.value;
+                            endPointIndicator.visualPosition = visualPosition;
+                            endPointIndicator.appearAnim.start();
+
+                            moveToDestAnim.start()
+                        }
+
                         property var tooltip: ToolTip {
                             parent: rollController.handle
                             visible: rollController.pressed
                             text: Math.floor(rollController.value)
+                        }
+
+                        property var endPointIndicator: Rectangle {
+                            property real visualPosition: 0
+                            x: parent.leftPadding + visualPosition * (parent.availableWidth - width + 2) - 1
+                            y: parent.topPadding + parent.availableHeight / 2 - height /2
+                            width: 15
+                            height: width
+                            radius: width/2
+                            parent: rollController
+                            visible: false
+                            border.color: control.Material.accent
+
+                            property var appearAnim: NumberAnimation {
+                                target: rollController.endPointIndicator
+                                properties: "width"
+                                from: 0
+                                to: 15
+                                duration: 200
+                            }
+                        }
+
+                        property var moveToDestAnim: NumberAnimation {
+                            target: rollController
+                            from: rollController.startPoint
+                            to: rollController.endPoint
+                            property: "value"
+                            easing.type: Easing.Linear
+                            duration: control.pathMoveDuration
+
+                            onStopped: {
+                                rollController.endPointIndicator.visible = false;
+                                rollController.endPointIndicator.visualPosition = 0;
+                            }
                         }
 
                         onValueChanged: {
@@ -204,38 +318,105 @@ Item {
                     Material.foreground: Material.accent
                     Material.elevation: 1
 
-                    Layout.leftMargin: 5
+                    Layout.alignment: Qt.AlignCenter
                     Layout.preferredWidth: height
 
                     ToolTip.text: 'reset button'
                     ToolTip.visible: hovered
                     property var animation : NumberAnimation {
-                        target: resetButton
+                        target: resetButton.contentItem
                         property: "rotation"
-                        duration: 200
-                        easing.type: Easing.InOutQuad
-                        to: 720
+                        duration: 1000
+                        easing.type: Easing.OutCubic
+                        from: 0
+                        to: 360
                     }
 
                     onClicked: {
-                        rotation = 0;
                         animation.start()
+                        yawController.value = 0;
+                        pitchController.value = 0;
+                        rollController.value = 0;
                     }
                 }
 
                 Button {
-                    //id: rollControllerIncreament
-                    text: '\ueebe'
+                    id: pathMode
+                    text: '\uf020'
                     font.family: 'IcoFont'
-                    enabled: false
+                    font.pixelSize: 20
 
                     Material.background: 'Transparent'
                     Material.foreground: Material.accent
                     Material.elevation: 1
 
+                    Layout.alignment: Qt.AlignCenter
                     Layout.preferredWidth: height
 
-                    ToolTip.text: 'reset button'
+                    ToolTip.text: 'slow mode'
+                    ToolTip.visible: hovered
+
+                    checkable: true
+
+                    Rectangle {
+                        id: statusRect
+                        anchors.centerIn: parent
+                        color: Material.accent
+                        height: width
+                        radius: width/2-2
+                        z: 0
+                    }
+                    property var appearStatusRectAnim: NumberAnimation {
+                        target: statusRect
+                        properties: "width"
+                        from: 0
+                        to: control.height*2.5
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+
+                    property var fadeStatusRectAnim: NumberAnimation {
+                        target: statusRect
+                        properties: "opacity"
+                        to: 0
+                    }
+
+                    onToggled: {
+
+                        if(checked === true)
+                        {
+                            statusRect.opacity = 0.1;
+                            appearStatusRectAnim.start();
+
+                            yawController.setStartPoint();
+                            rollController.setStartPoint();
+                            pitchController.setStartPoint();
+                        }
+                        else
+                        {
+                            fadeStatusRectAnim.start();
+
+                            yawController.setEndPoint();
+                            rollController.setEndPoint();
+                            pitchController.setEndPoint();
+                        }
+                    }
+                }
+
+                Button {
+                    //id: rollControllerIncreament
+                    text: checked ? '\uec61':'\uec8c';
+                    font.family: 'IcoFont'
+                    enabled: true
+                    checkable: true
+
+                    Material.background: 'Transparent'
+                    Material.foreground: Material.accent
+                    Material.elevation: 1
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.preferredWidth: height
+
+                    ToolTip.text: 'lock'
                     ToolTip.visible: hovered
 
                     onClicked: {
@@ -245,7 +426,7 @@ Item {
 
                 Button {
                     //id: rollControllerIncreament
-                    text: '\uefc4'
+                    text: '\uec42'
                     font.family: 'IcoFont'
                     enabled: false
 
@@ -253,28 +434,11 @@ Item {
                     Material.foreground: Material.accent
                     Material.elevation: 1
                     Layout.preferredWidth: height
+                    Layout.alignment: Qt.AlignCenter
 
-                    onClicked: {
+                    ToolTip.text: 'bluetooth'
+                    ToolTip.visible: hovered
 
-                    }
-                }
-
-                Button {
-                    //id: rollControllerIncreament
-                    text: '\ueec3'
-                    font.family: 'IcoFont'
-                    enabled: false
-
-                    Material.background: 'Transparent'
-                    Material.foreground: Material.accent
-                    Material.elevation: 1
-                    Layout.preferredWidth: height
-                    Layout.alignment: Qt.AlignRight
-                    Layout.rightMargin: 5
-
-                    onClicked: {
-
-                    }
                 }
             }
         }
@@ -292,4 +456,6 @@ Item {
             Material.elevation: 1
         }
     }
+
+    //Material.accent: Material.Grey
 }

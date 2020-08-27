@@ -81,6 +81,10 @@ public slots:
 
     void setYawValue(int data)
     {
+        static int lastValue = std::numeric_limits<int>::min();
+        if(lastValue == data)
+            return;
+        lastValue=data;
         QString command = QString::number(OpCode::MOVE_YAW_MID) + ':' +QString::number(data) + ';';
         qDebug() << "data:" << command;
         mBluetoothSocket.write(command.toLocal8Bit());
@@ -88,6 +92,10 @@ public slots:
     }
     void setPitchValue(int data)
     {
+        static int lastValue = std::numeric_limits<int>::min();
+        if(lastValue == data)
+            return;
+        lastValue=data;
         QString command = QString::number(OpCode::MOVE_PITCH_MID) + ':' +QString::number(data) + ';';
         qDebug() << "data:" << command;
         mBluetoothSocket.write(command.toLocal8Bit());
@@ -95,6 +103,10 @@ public slots:
     }
     void setRollValue(int data)
     {
+        static int lastValue = std::numeric_limits<int>::min();
+        if(lastValue == data)
+            return;
+        lastValue=data;
         QString command = QString::number(OpCode::MOVE_ROLL_MID) + ':' +QString::number(data) + ';';
         qDebug() << "data:" << command;
         mBluetoothSocket.write(command.toLocal8Bit());
