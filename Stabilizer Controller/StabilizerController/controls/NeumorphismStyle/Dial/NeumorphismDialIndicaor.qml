@@ -5,7 +5,7 @@ Item {
 
     property color color: '#fff'
     property real lineWidth: 0.5
-    property real lineLength: 8
+    property real lineLength: 1
 
     onColorChanged: canvas.requestPaint()
     onLineWidthChanged: canvas.requestPaint()
@@ -24,7 +24,13 @@ Item {
             ctx.lineWidth = control.lineWidth;
             ctx.strokeStyle = control.color;
 
-            for(var i = -Math.PI/2 ; i <= 3/2 * Math.PI ; i+=0.075)
+            var i = -Math.PI/2;
+            const [x1,y1] = getPoint(i,radius + 2)
+            ctx.moveTo(x1,y1)
+            const [x2,y2] = getPoint(i,radius - control.lineLength - 2)
+            ctx.lineTo(x2,y2)
+
+            for(i+=0.15; i <= 3/2 * Math.PI ; i+=0.15)
             {
                 const [x1,y1] = getPoint(i,radius)
                 ctx.moveTo(x1,y1)

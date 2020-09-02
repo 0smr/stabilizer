@@ -19,10 +19,13 @@ Item {
     readonly property alias hovered: mouseArea.containsMouse;
 
     signal clicked();
+    signal pressAndHold();
+    signal pressAndHoldRpeater();
 
-    state: !enabled ? 'disable' :
-            pressed ? 'press' :
-            hide ? 'hide' :'enable';
+    state: hide ? 'hide' :
+           !enabled ? 'disable' :
+           pressed ? 'press' : 'enable';
+
 
     Rectangle {
         id: buttonPlate
@@ -81,7 +84,21 @@ Item {
         anchors.fill: control
         hoverEnabled: true
 
-        onPressed: control.clicked();
+        onPressAndHold: {
+            control.pressAndHold()
+            timer.start()
+        }
+        onClicked: control.clicked();
+    }
+
+    Timer {
+        id: timer
+        interval: 400
+        onTriggered: {
+            control.pressAndHoldRpeater()
+            start()
+        }
+        running: control.pressed
     }
 
     // TODO: change dark and light shadow radius and offset. to make button more responsive.

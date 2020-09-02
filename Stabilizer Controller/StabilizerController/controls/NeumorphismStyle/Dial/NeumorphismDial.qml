@@ -18,6 +18,7 @@ Control {
 
     property bool activeFocusOnPress: false
     property bool tickmarksVisible: true
+    property bool hide: false
 
     property alias angle: mouseArea.angle
     property alias value: range.value
@@ -39,11 +40,11 @@ Control {
 
     NeumorphismDialIndicaor {
         id: dialHandle
-        width: parent.width - 15
+        width: parent.width * 0.9
         height: width
         anchors.centerIn: parent
 
-        rotation: angle
+        rotation: angle - 180
         color: Qt.hsva (0,0,1-background.color.hsvValue,0.2)
 
         lineWidth: 1
@@ -60,7 +61,7 @@ Control {
     MouseArea {
         id: mouseArea
 
-        property real angle: 0
+        property real angle: 180
 
         hoverEnabled: true
         anchors.fill: background

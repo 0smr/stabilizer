@@ -21,8 +21,8 @@ Item {
     property bool hide: false;
     property bool hovered: false;
 
-    state: !enabled ? 'disable' :
-            hide ? 'hide' :'enable';
+    state: hide ? 'hide' :
+            !enabled ? 'disable' : 'enable';
 
     Rectangle {
         id: buttonPlate

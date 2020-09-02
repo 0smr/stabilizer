@@ -9,7 +9,7 @@ Item {
     id: control
 
     width: 200
-    height: 40
+    height: 50
 
     readonly property color lightShadowColor: Qt.hsla(0,0,background.color.hslLightness+0.05)
     readonly property color darkShadowColor: Qt.hsva (0,0,background.color.hsvValue-0.05)
@@ -17,43 +17,58 @@ Item {
     property bool hide: false;
     property real indicatorHeight: height * 0.6
 
+    property alias currentIndex: tumbler.currentIndex
+    readonly property alias model: tumbler.model
     readonly property alias background: background
 
-    state:'enable';
+    function setValue(value){
+        if(180 < value && value < 180)
+            currentIndex = value + 180
+    }
+    function resetValue(){
+        currentIndex = 180
+    }
+    function increment(){
+        currentIndex++
+    }
+    function decrement(){
+        currentIndex--
+    }
+
+    state:  hide    ? 'hide':
+            enabled ? 'enable' : 'disable';
 
     Tumbler {
         id: tumbler
+
+        property var modelArray: Array.from(Array(361), (_, i) => i -180)
 
         anchors.centerIn: parent
         width: indicatorHeight
         height: control.width
 
-        model: 360
+        model: modelArray
+        currentIndex: 180
         visibleItemCount: control.width/6
         delegate: Rectangle {
             color: 'Transparent'
             Rectangle {
-                id: modelDelegate
-
-                color: modelData == 180 ? 'red' : '#bbb'
-                width: modelData % 10 == 0? parent.width * 0.7 : Math.abs(2 - modelData % 5) + 5
-                height: modelData == 180 ? parent.height/3 : 1
+                color: index == 180 ? 'red' : '#bbb'
+                width: index % 10 == 0? parent.width * 0.7 : Math.abs(2 - index % 5) + 5
+                height: 1
 
                 radius: height /2
                 anchors.centerIn: parent
             }
-            opacity: 0.5 + (1-Math.abs(Tumbler.displacement))*0.035       }
+            opacity: 0.5 + (1-Math.abs(Tumbler.displacement))*0.035
+        }
 
-        z:2
+        z:11
 
         transform: Rotation {
             angle: 90
             origin.x: tumbler.width / 2
             origin.y: tumbler.height / 2
-        }
-
-        onCurrentIndexChanged: {
-            console.log(currentIndex)
         }
     }
 
@@ -63,7 +78,7 @@ Item {
         border.color: Qt.hsva(0,0,color.hslLightness,0.5)
         border.width: 2
 
-        z:1
+        z:10
         //radius:width/2
         color: Qt.hsla(0, 0, 0.95)
     }

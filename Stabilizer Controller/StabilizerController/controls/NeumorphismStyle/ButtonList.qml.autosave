@@ -21,7 +21,7 @@ Item {
             backColor: control.color
             hide: control.hide
             enabled: control.enabled && activate
-            onClicked: func();
+            onClicked: console.log(typeof func)
             text.text: icon
         }
     }
