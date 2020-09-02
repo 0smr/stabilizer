@@ -20,7 +20,7 @@ ApplicationWindow {
 
     ControlPanel {
         id: controlPanel
-        color: Qt.hsla(0, 0, 0.9)
+        color: Qt.hsla(0, 0, 0.1)
         visible: false
     }
 

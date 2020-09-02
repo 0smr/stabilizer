@@ -3,7 +3,7 @@ import QtQuick 2.0
 Item {
     id:control
 
-    property alias backColor: background.backColor
+    property alias color: background.color
     property alias background: background
     property alias hide: background.hide
 
@@ -17,10 +17,10 @@ Item {
         if( 0 <= value && value <= 6) {
             var i = 0
             while(i < value)
-                indicatorList[i++].color = 'grey'
+                indicatorList[i++].cell = true
 
             while(i < 6)
-                indicatorList[i++].color = 'Transparent'
+                indicatorList[i++].cell = false
 
             background.text.text = value <= 0 ? '\ueeb1':
                                    value <= 2 ? '\ueeb4':
@@ -62,11 +62,12 @@ Item {
 
         for( i = Math.PI/2 ; i <= 5/4 * Math.PI ; i += 0.4) {
             indicatorList[j].width    = Qt.binding(()=>{ return control.width/10 });
-            indicatorList[j].xRadius  = Qt.binding(()=>{ return cx });
-            indicatorList[j].yRadius  = Qt.binding(()=>{ return cy });
-            indicatorList[j].rad      = Qt.binding(()=>{ return rad });
+            indicatorList[j].xRadius  = Qt.binding(()=>{ return control.cx });
+            indicatorList[j].yRadius  = Qt.binding(()=>{ return control.cy });
+            indicatorList[j].rad      = Qt.binding(()=>{ return control.rad });
+            indicatorList[j].enabled  = Qt.binding(()=>{ return control.enabled });
             indicatorList[j].border.color
-                                      = Qt.binding(()=>{ return backColor });
+                                      = Qt.binding(()=>{ return Qt.hsva(0,0,1-control.color.hsvValue) });
             indicatorList[j].angle    = i
             j++;
 

@@ -76,7 +76,7 @@ Item {
         id: background
         anchors.fill: parent
         border.color: Qt.hsva(0,0,color.hslLightness,0.5)
-        border.width: 2
+        border.width: 1
 
         z:10
         //radius:width/2

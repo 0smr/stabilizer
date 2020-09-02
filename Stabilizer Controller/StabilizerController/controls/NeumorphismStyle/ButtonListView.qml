@@ -18,10 +18,10 @@ Item {
         id: delegate
         NeumorphismCircleButton {
             width: defualtItemWidth
-            backColor: control.color
+            color: control.color
             hide: control.hide
             enabled: control.enabled && activate
-            onClicked: func();
+            onClicked: func(this);
             text.text: icon
         }
     }

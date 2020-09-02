@@ -44,7 +44,7 @@ Item {
                 anchors.fill: parent
                 NeumorphismCircleButton {
                     height: width
-                    backColor: control.color
+                    color: control.color
                     text.text: '\uef3a'
                     text.font.family: icoFontRegular.name
 
@@ -57,7 +57,7 @@ Item {
 
                 Battery {
                     height: width
-                    backColor: control.color
+                    color: control.color
                     enabled: false
 
                     Layout.preferredWidth: defualtButtonWidth  * 3/2
@@ -85,8 +85,7 @@ Item {
                 NeumorphismDial {
                     id: yawAngleController
 
-                    //width:
-                    //Component.onCompleted: width = parent.width
+                    enabled: true
 
                     Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
                     Layout.preferredWidth: parent.width * 3/5
@@ -245,35 +244,37 @@ Item {
                     ListElement {
                         //night mode
                         name: 'reset button'
-                        func: ()=>{ control.toggleNightMode(); }
+                        func: (button)=>{ control.toggleNightMode(button); }
                         icon: '\uee7e'
                         activate: true
                     }
                     ListElement {
-                        // reset button
-                        name: 'reset button'
+                        // reset controller button
+                        name: 'reset'
                         func: ()=>{ control.resetControllers(); }
                         icon: '\uefd1'
                         activate: true
                     }
                     ListElement {
                         // range iterator
-                        name: 'reset button'
+                        name: 'range'
                         func: ()=>{}
                         icon:'\uf020'
-                        activate: true
+                        activate: false
                     }
                     ListElement {
-                        name: 'reset button'
+                        // bluetooth reconnection button
+                        name: 'lock'
                         func: ()=>{}
                         icon:'\uec61'
-                        activate: true
+                        activate: false
                     }
                     ListElement {
-                        name: 'reset button'
+                        // bluetooth reconnection button
+                        name: 'bluetooth reconnection'
                         func: ()=>{}
                         icon: '\uec42'
-                        activate: true
+                        activate: false
                     }
                 }
         }
@@ -288,10 +289,10 @@ Item {
 
 
     property bool isNightModeOn : false;
-    function toggleNightMode() {
+    function toggleNightMode(button) {
 
         isNightModeOn = !isNightModeOn;
-
+        button.text.text = isNightModeOn ? '\uef9e': '\uee7e'  ;
         if(isNightModeOn === true)
         {
             control.color = Qt.hsla(0, 0, 0.1)

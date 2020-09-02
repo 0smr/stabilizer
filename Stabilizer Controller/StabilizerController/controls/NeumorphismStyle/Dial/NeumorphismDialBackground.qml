@@ -12,8 +12,8 @@ Item {
     width: 200
     height: width
 
-    readonly property color lightShadowColor: Qt.hsla(0,0,background.color.hslLightness+0.05)
-    readonly property color darkShadowColor: Qt.hsva (0,0,background.color.hsvValue-0.05)
+    readonly property color lightShadowColor: Qt.hsla(0,0,background.color.hslLightness+0.08)
+    readonly property color darkShadowColor: Qt.hsva (0,0,background.color.hsvValue-0.08)
 
     property alias color: buttonPlate.color
     property alias background: buttonPlate
@@ -81,22 +81,9 @@ Item {
 
     // TODO: change dark and light shadow radius and offset. to make button more responsive.
 
-    readonly property real shadowOffset: control.width * 0.03 + 3.33
-    readonly property real shadowRadius: control.width * 0.05 + 7.67
+    readonly property real shadowOffset: control.width * 0.03 + 1.33
+    readonly property real shadowRadius: control.width * 0.05 + 5.67
     // light shadow
-    // position: top left.
-    DropShadow {
-        id: darkShadow
-        anchors.fill: buttonBorder
-        horizontalOffset: shadowOffset
-        verticalOffset: shadowOffset
-        radius: shadowRadius
-        samples: 17
-        color: Qt.hsva(0,0,background.color.hsvValue-0.1)
-        source: buttonBorder
-    }
-
-    // dark shadow
     // position: bottom right.
     DropShadow {
         id: lightShadow
@@ -104,8 +91,21 @@ Item {
         horizontalOffset: - shadowOffset
         verticalOffset: - shadowOffset
         radius: shadowRadius
-        samples: 17
+        samples: 10
         color: Qt.hsla(0,0,background.color.hslLightness + 0.1)
+        source: buttonBorder
+    }
+
+    // dark shadow
+    // position: top left.
+    DropShadow {
+        id: darkShadow
+        anchors.fill: buttonBorder
+        horizontalOffset: shadowOffset
+        verticalOffset: shadowOffset
+        radius: shadowRadius
+        samples: 10
+        color: Qt.hsva(0,0,background.color.hsvValue-0.1)
         source: buttonBorder
     }
 
