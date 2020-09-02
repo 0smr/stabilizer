@@ -2,13 +2,18 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>controls/CustomCheckBox.qml</file>
-        <file>controls/HambergerToggle.qml</file>
-        <file>controls/IconButton.qml</file>
         <file>views/About.qml</file>
-        <file>controls/CustomDial.qml</file>
-        <file>views/Settings.qml</file>
-        <file>views/Main.qml</file>
-        <file>controls/CustomDialindicator.qml</file>
+        <file>views/SettingsPanel.qml</file>
+        <file>views/ControlPanel.qml</file>
+        <file>controls/NeumorphismStyle/Dial/NeumorphismDial.qml</file>
+        <file>controls/NeumorphismStyle/Dial/NeumorphismDialBackground.qml</file>
+        <file>controls/NeumorphismStyle/Dial/NeumorphismDialIndicaor.qml</file>
+        <file>controls/NeumorphismStyle/NeumorphismCircleButton.qml</file>
+        <file>controls/NeumorphismStyle/BatteryIndicator.qml</file>
+        <file>controls/NeumorphismStyle/NeumorphismTumbler.qml</file>
+        <file>controls/NeumorphismStyle/Battery.qml</file>
+        <file>controls/NeumorphismStyle/ButtonListView.qml</file>
+        <file>resources/fonts/icofont.ttf</file>
+        <file>resources/fonts/DS-DIGI.TTF</file>
     </qresource>
 </RCC>

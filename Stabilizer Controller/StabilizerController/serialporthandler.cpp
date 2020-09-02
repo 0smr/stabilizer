@@ -52,6 +52,27 @@ void serialPortHandler::setConnected(bool connected)
     emit connectedChanged(connected);
 }
 
+void serialPortHandler::sendCommand(Stabilizer::OpCode operationCode, QString data)
+{
+    QString command = QString::number(operationCode) + ':';
+
+    switch (operationCode)
+    {
+    case OpCode::MOVE_YAW_MID:
+    case OpCode::MOVE_ROLL_MID:
+    case OpCode::MOVE_PITCH_MID:
+        command += data + ';';
+        break;
+
+    default:
+        break;
+    }
+
+    qDebug() << "data:" << command;
+    mBluetoothSocket.write(command.toLocal8Bit());
+    mBluetoothSocket.waitForReadyRead(50);
+}
+
 void serialPortHandler::bluetoothDeviceStateChanged(QBluetoothLocalDevice::HostMode mode)
 {
     if(mode == QBluetoothLocalDevice::HostConnectable
@@ -108,6 +129,33 @@ void serialPortHandler::parseValue(QString input)
     case Stabilizer::OpCode::MESSAGE:
         qDebug() << strList.join(' ');
         break;
+    }
+}
+
+void serialPortHandler::setYawValue(int yawValue)
+{
+    if(mLastRoll == yawValue)
+    {
+        mLastRoll = yawValue;
+        sendCommand(OpCode::MOVE_YAW_MID,QString::number(yawValue));
+    }
+}
+
+void serialPortHandler::setPitchValue(int pitchValue)
+{
+    if(mLastPitch == pitchValue)
+    {
+        mLastPitch = pitchValue;
+        sendCommand(OpCode::MOVE_PITCH_MID,QString::number(pitchValue));
+    }
+}
+
+void serialPortHandler::setRollValue(int rollValue)
+{
+    if(mLastYaw != rollValue)
+    {
+        mLastYaw = rollValue;
+        sendCommand(OpCode::MOVE_ROLL_MID,QString::number(rollValue));
     }
 }
 

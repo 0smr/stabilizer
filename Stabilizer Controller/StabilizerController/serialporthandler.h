@@ -10,9 +10,6 @@
 #include <QtBluetooth/QBluetoothServiceInfo>
 #include <QtBluetooth/QBluetoothDeviceDiscoveryAgent>
 
-#include <cstring>
-#include <thread>
-
 #include "opCode.h"
 
 using Stabilizer::OpCode;
@@ -40,26 +37,7 @@ public slots:
      * @param operationCode
      * @param data
      */
-    void sendCommand(OpCode operationCode,QString data)
-    {
-        QString command = QString::number(operationCode) + ':';
-
-        switch (operationCode)
-        {
-        case OpCode::MOVE_YAW_MID:
-        case OpCode::MOVE_ROLL_MID:
-        case OpCode::MOVE_PITCH_MID:
-            command += data + ';';
-            break;
-
-        default:
-            break;
-        }
-
-        qDebug() << "data:" << command;
-        mBluetoothSocket.write(command.toLocal8Bit());
-        mBluetoothSocket.waitForReadyRead(2000);
-    }
+    void sendCommand(OpCode operationCode,QString data);
 
     void bluetoothDeviceStateChanged(QBluetoothLocalDevice::HostMode mode);
     void bluetoothConnected();
@@ -79,42 +57,14 @@ public slots:
     void bluetoothDeviceFound(const QBluetoothDeviceInfo & bDeviceInfo);
     void parseValue(QString input);
 
-    void setYawValue(int data)
-    {
-        static int lastValue = std::numeric_limits<int>::min();
-        if(lastValue == data)
-            return;
-        lastValue=data;
-        QString command = QString::number(OpCode::MOVE_YAW_MID) + ':' +QString::number(data) + ';';
-        qDebug() << "data:" << command;
-        mBluetoothSocket.write(command.toLocal8Bit());
-        mBluetoothSocket.waitForReadyRead(50);
-    }
-    void setPitchValue(int data)
-    {
-        static int lastValue = std::numeric_limits<int>::min();
-        if(lastValue == data)
-            return;
-        lastValue=data;
-        QString command = QString::number(OpCode::MOVE_PITCH_MID) + ':' +QString::number(data) + ';';
-        qDebug() << "data:" << command;
-        mBluetoothSocket.write(command.toLocal8Bit());
-        mBluetoothSocket.waitForReadyRead(50);
-    }
-    void setRollValue(int data)
-    {
-        static int lastValue = std::numeric_limits<int>::min();
-        if(lastValue == data)
-            return;
-        lastValue=data;
-        QString command = QString::number(OpCode::MOVE_ROLL_MID) + ':' +QString::number(data) + ';';
-        qDebug() << "data:" << command;
-        mBluetoothSocket.write(command.toLocal8Bit());
-        mBluetoothSocket.waitForReadyRead(50);
-    }
+    void setYawValue(int yawValue);
+    void setPitchValue(int pitchValue);
+    void setRollValue(int rollValue);
 
 private:
     bool mConnected;
+    int mLastYaw,mLastPitch,mLastRoll;
+
     QString mBuffer;
     QBluetoothSocket mBluetoothSocket;
     QBluetoothLocalDevice mLocalDevice;
