@@ -1,44 +1,53 @@
-import QtQuick 2.0
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
+import QtGraphicalEffects 1.0
+import "NeumorphismStyle"
 
-Item {
+Page {
     id: control
 
-    property real defualtItemWidth: 40
-    property color color: Qt.hsla(0, 0, 0.95)
     property bool hide: false
+    property real itemWidth: 40
+    property color color: Qt.hsla(0, 0, 0.9)
 
-    //readonly property alias listModel: listModel
+    property Component gridView: Grid { spacing: 5;  }
 
-    width: 200
-    height: 80
+    readonly property alias grid: grid;
 
-    required property var listModel;
-
-    Component {
-        id: delegate
-        NeumorphismCircleButton {
-            width: defualtItemWidth
-            color: control.color
-            hide: control.hide
-            enabled: control.enabled && activate
-            onClicked: func(this);
-            text.text: icon
-        }
+    clip: true
+    background: Rectangle {
+        id: back
+        color: control.color
     }
 
-    PathView {
+    Column {
         anchors.fill: parent
-        model: control.listModel
-        delegate: delegate
-        pathItemCount: 5
 
-        path: Path {
-            startX: 0; startY: control.height*1.2
+        Flickable {
+            id: scroll
 
-            PathCubic {
-                x: control.width; y: control.height*1.2
-                control1X: 50; control1Y: 0
-                control2X: control.width-50; control2Y: 0
+            topMargin: 18
+            width: parent.width
+            height: parent.height
+
+            //ScrollBar.vertical: ScrollBar { }
+
+            interactive: false
+            flickableDirection: Qt.Vertical
+
+            contentWidth: width
+            contentHeight: grid.height
+
+            Item {
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: grid.width
+                height: childrenRect.height
+
+                Loader {
+                    id: grid
+                    sourceComponent: control.gridView
+                }
             }
         }
     }

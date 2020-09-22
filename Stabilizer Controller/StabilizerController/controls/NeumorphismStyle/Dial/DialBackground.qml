@@ -154,6 +154,12 @@ Item {
         }
     ]
 
+    /*
+     *
+     *
+     *
+     */
+
     transitions: [
         Transition {
             from: 'hide'

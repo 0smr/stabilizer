@@ -11,6 +11,10 @@ Item {
     readonly property color darkShadowColor: Qt.hsva (0,0,background.color.hsvValue-0.05)
 
     property bool hide: false;
+    property bool checkable: false
+    property bool checked: false
+
+    property alias  accent: checkIndicator.color
     property alias color: buttonPlate.color
 
     readonly property alias background: buttonPlate
@@ -22,10 +26,16 @@ Item {
     signal pressAndHold();
     signal pressAndHoldRpeater();
 
+    function toggle() {
+        toggleAnimation.from = 0;
+        toggleAnimation.to = 1;
+        toggleAnimation.start();
+
+    }
+
     state: hide ? 'hide' :
            !enabled ? 'disable' :
            pressed ? 'press' : 'enable';
-
 
     Rectangle {
         id: buttonPlate
@@ -48,6 +58,30 @@ Item {
             font.family: 'IcoFont'
 
             anchors.centerIn: parent
+        }
+    }
+
+    Rectangle {
+        id: checkIndicator
+
+        property real colorOpacity: control.checked
+
+        x: control.width * 0.65
+        y: 5
+
+        width: control.width / 10
+        height: width
+        radius: width / 2
+
+        z:10
+
+        visible: control.checkable
+        enabled: control.checkable
+
+        color: Qt.hsva (0.6,1,1,colorOpacity)
+
+        Behavior on colorOpacity {
+            NumberAnimation {duration: 300}
         }
     }
 
@@ -87,6 +121,7 @@ Item {
         onPressAndHold: {
             control.pressAndHold()
             timer.start()
+            control.checked = control.checkable ? !control.checked:control.checked
         }
         onClicked: control.clicked();
     }
@@ -159,6 +194,10 @@ Item {
                 target: text
                 opacity: 0.7
             }
+            PropertyChanges {
+                target: checkIndicator
+                opacity: 0.7
+            }
         },
         State {
             name: "disable"
@@ -206,6 +245,13 @@ Item {
             PropertyAnimation {
                 properties: 'opacity'
                 duration: 1000
+            }
+        },
+        Transition {
+            to: 'hide'
+            PropertyAnimation {
+                properties: 'opacity'
+                duration: 500
             }
         },
         Transition {

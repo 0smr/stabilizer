@@ -1,18 +1,17 @@
-import QtQuick 2.0
-import QtQuick.Controls 2.12
+import QtQuick 2.12
+import QtQuick.Controls 2.12 as QQC2
+import QtQuick.Controls 1.2 as QQC1
 import QtGraphicalEffects 1.12
-import QtQuick.Particles 2.12
-import QtQuick.Controls.Styles 1.0
+
+import "./" as Neum
 
 
 Item {
     id: control
 
-    width: 200
-    height: 50
-
     readonly property color lightShadowColor: Qt.hsla(0,0,background.color.hslLightness+0.05)
     readonly property color darkShadowColor: Qt.hsva (0,0,background.color.hsvValue-0.05)
+    readonly property var value: model[currentIndex];
 
     property bool hide: false;
     property real indicatorHeight: height * 0.6
@@ -35,41 +34,14 @@ Item {
         currentIndex--
     }
 
+    width: 200
+    height: 50
+
     state:  hide    ? 'hide':
             enabled ? 'enable' : 'disable';
 
-    Tumbler {
-        id: tumbler
-
-        property var modelArray: Array.from(Array(361), (_, i) => i -180)
-
-        anchors.centerIn: parent
-        width: indicatorHeight
-        height: control.width
-
-        model: modelArray
-        currentIndex: 180
-        visibleItemCount: control.width/6
-        delegate: Rectangle {
-            color: 'Transparent'
-            Rectangle {
-                color: index == 180 ? 'red' : '#bbb'
-                width: index % 10 == 0? parent.width * 0.7 : Math.abs(2 - index % 5) + 5
-                height: 1
-
-                radius: height /2
-                anchors.centerIn: parent
-            }
-            opacity: 0.5 + (1-Math.abs(Tumbler.displacement))*0.035
-        }
-
-        z:11
-
-        transform: Rotation {
-            angle: 90
-            origin.x: tumbler.width / 2
-            origin.y: tumbler.height / 2
-        }
+    onCurrentIndexChanged: {
+        control.value
     }
 
     Rectangle {
@@ -82,6 +54,46 @@ Item {
         //radius:width/2
         color: Qt.hsla(0, 0, 0.95)
     }
+
+//    RangeModel {
+
+//    }
+
+    QQC2.Tumbler {
+        id: tumbler
+
+        property var modelArray: Array.from(Array(360), (_, i) => i - 180)
+        property real tiksWidth: width * 0.8
+
+        anchors.centerIn: parent
+        width: indicatorHeight
+        height: control.width
+
+        model: modelArray
+        currentIndex: 180
+        visibleItemCount: 25
+        delegate: Rectangle {
+            color: 'Transparent'
+            Rectangle {
+                color: index === 180 ? 'red' : '#bbb'
+                width: index % 10 == 0? tumbler.tiksWidth : Math.abs(2 - index % 5) + tumbler.tiksWidth /3
+                height: 1
+
+                radius: height /2
+                anchors.centerIn: parent
+            }
+            opacity: 0.5 + (1-Math.abs(QQC2.Tumbler.displacement))*0.035
+        }
+
+        z:10
+
+        transform: Rotation {
+            angle: 90
+            origin.x: tumbler.width / 2
+            origin.y: tumbler.height / 2
+        }
+    }
+
 
     Rectangle {
         id: shadow
@@ -162,8 +174,8 @@ Item {
                 opacity: 0
             }
             PropertyChanges {
-                target: text
-                opacity: 0.4
+                target: tumbler
+                opacity: 0.8
             }
         },
         State {
@@ -177,15 +189,7 @@ Item {
                 opacity: 0
             }
             PropertyChanges {
-                target: buttonBorderGradiant
-                opacity: 0
-            }
-            PropertyChanges {
-                target: text
-                opacity: 0
-            }
-            PropertyChanges {
-                target: buttonPlate
+                target: tumbler
                 opacity: 0
             }
         }
@@ -197,6 +201,13 @@ Item {
             PropertyAnimation {
                 properties: 'opacity'
                 duration: 1000
+            }
+        },
+        Transition {
+            to: 'hide'
+            PropertyAnimation {
+                properties: 'opacity'
+                duration: 500
             }
         },
         Transition {

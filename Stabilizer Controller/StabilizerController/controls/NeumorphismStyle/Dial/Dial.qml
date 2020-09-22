@@ -33,21 +33,28 @@ Control {
 
     activeFocusOnTab: true
 
-    NeumorphismDialBackground {
+    DialBackground {
         id: dialBackground
         anchors.fill: control
+        hide: control.hide
+        visible: parent.visible
     }
 
-    NeumorphismDialIndicaor {
+    DialIndicaor {
         id: dialHandle
         width: parent.width * 0.9
         height: width
         anchors.centerIn: parent
 
+        opacity: control.hide ? 0 : 1
         rotation: angle - 180
         color: Qt.hsva (0,0,1-background.color.hsvValue,0.2)
 
         lineWidth: 1
+
+        Behavior on opacity {
+            NumberAnimation {duration: 600}
+        }
     }
 
     RangeModel {

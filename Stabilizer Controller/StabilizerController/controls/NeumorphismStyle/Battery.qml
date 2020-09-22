@@ -35,7 +35,7 @@ Item {
     width: 60
     height: width
 
-    NeumorphismCircleButton {
+    CircleButton {
         id: background
 
         anchors.right: parent.right

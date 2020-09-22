@@ -7,6 +7,7 @@ Rectangle {
     property real angle: 0
     property real rad: 0
     property bool cell: false
+    property bool hide: false
 
     x: rad * Math.cos(angle) + cx - width / 2
     y: rad * Math.sin(angle) + cy - width / 2
@@ -15,5 +16,9 @@ Rectangle {
     radius: width/2
     color: cell ? border.color : 'Transparent'
     border.color: 'grey'
-    opacity: enabled ? 1 : 0.1
+    opacity: enabled ? 1 : hide ? 0 : 0.1
+
+    Behavior on opacity {
+        NumberAnimation { duration: 600 }
+    }
 }
