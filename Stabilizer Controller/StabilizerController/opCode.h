@@ -11,32 +11,32 @@ namespace Stabilizer
     {
         /// operations : contain controll commands.
         MOVE_PITCH_MID = 0x05,  /**
-                             * this command send from controller application.
-                             * and means pitch motor must move with given angle.
-                             * \param angle : single parameters containing a number between -90 to 90
-                             */
-        MOVE_ROLL_MID,      /** same as the \a MOVE_PITCH_MID   */
-        MOVE_YAW_MID,       /** same as the \a MOVE_PITCH_MID   */
-        RESET_PITCH_MID,    /// reset just pitch mid    (no parameters)
-        RESET_ROLL_MID,     /// reset just roll mid     (no parameters)
-        RESET_YAW_MID,      /// reset just yaw mid      (no parameters)
-        PATH_WITH_SPEED,    /*!
-                            * this command send by controller application and contain 6 parameters
-                            * \param midDist : distention
-                            */
-        PITCH_MID,          /** get \a PITCH_MID value (no parameters)       */
-        ROLL_MID,           /** get \a ROLL_MID value (no parameters)        */
-        YAW_MID,            /** get \a YAW_MID value (no parameters)         */
-        PITCH_ANGLE,        /** get \a PITCH_ANGLE value (no parameters)     */
-        ROLL_ANGLE,         /** get \a ROLL_ANGLE value (no parameters)      */
-        YAW_ANGLE,          /** get \a YAW_ANGLE value (no parameters)       */
+                                 * this command send from controller application.
+                                 * and means pitch motor must move with given angle.
+                                 * \param angle : single parameters containing a number between -90 to 90
+                                 */
+        MOVE_ROLL_MID,          /** same as the \a MOVE_PITCH_MID   */
+        MOVE_YAW_MID,           /** same as the \a MOVE_PITCH_MID   */
+        RESET_PITCH_MID,        /// reset just pitch mid    (no parameters)
+        RESET_ROLL_MID,         /// reset just roll mid     (no parameters)
+        RESET_YAW_MID,          /// reset just yaw mid      (no parameters)
+        PATH_WITH_SPEED,        /*!
+                                * this command send by controller application and contain 6 parameters
+                                * \param midDist : distention
+                                */
+        PITCH_MID,              /** get \a PITCH_MID value (no parameters)       */
+        ROLL_MID,               /** get \a ROLL_MID value (no parameters)        */
+        YAW_MID,                /** get \a YAW_MID value (no parameters)         */
+        PITCH_ANGLE,            /** get \a PITCH_ANGLE value (no parameters)     */
+        ROLL_ANGLE,             /** get \a ROLL_ANGLE value (no parameters)      */
+        YAW_ANGLE,              /** get \a YAW_ANGLE value (no parameters)       */
 
         /// settings:
         CALIBRATE_STABILIZER = 0x20,
         /**
-                             * call calibration function.
-                             * it take some seconds to calibrate
-                             */
+         * call calibration function.
+         * it take some seconds to calibrate
+         */
         GET_ERROR_DATA,         /** get data from GYRO and ACCEL error data and send to controller application. */
         GET_EEPROM_DATA,        /** get data from eeprom data and send to controller application. */
         GET_CURRENT_ANGLE,      /** get */

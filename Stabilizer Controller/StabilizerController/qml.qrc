@@ -5,15 +5,18 @@
         <file>views/About.qml</file>
         <file>views/SettingsPanel.qml</file>
         <file>views/ControlPanel.qml</file>
-        <file>controls/NeumorphismStyle/Dial/NeumorphismDial.qml</file>
-        <file>controls/NeumorphismStyle/Dial/NeumorphismDialBackground.qml</file>
-        <file>controls/NeumorphismStyle/Dial/NeumorphismDialIndicaor.qml</file>
-        <file>controls/NeumorphismStyle/NeumorphismCircleButton.qml</file>
+        <file>controls/NeumorphismStyle/Dial/Dial.qml</file>
+        <file>controls/NeumorphismStyle/Dial/DialBackground.qml</file>
+        <file>controls/NeumorphismStyle/Dial/DialIndicaor.qml</file>
+        <file>controls/NeumorphismStyle/CircleButton.qml</file>
         <file>controls/NeumorphismStyle/BatteryIndicator.qml</file>
-        <file>controls/NeumorphismStyle/NeumorphismTumbler.qml</file>
+        <file>controls/NeumorphismStyle/CustomTumbler.qml</file>
         <file>controls/NeumorphismStyle/Battery.qml</file>
-        <file>controls/NeumorphismStyle/ButtonListView.qml</file>
+        <file>controls/CustomPane.qml</file>
         <file>resources/fonts/icofont.ttf</file>
         <file>resources/fonts/DS-DIGI.TTF</file>
+        <file>controls/NeumorphismStyle/Dial/RangedDial.qml</file>
+        <file>controls/NeumorphismStyle/CustomLabel.qml</file>
+        <file>controls/DoubleText.qml</file>
     </qresource>
 </RCC>
