@@ -16,7 +16,9 @@ Rectangle {
     radius: width/2
     color: cell ? border.color : 'Transparent'
     border.color: 'grey'
-    opacity: enabled ? 1 : hide ? 0 : 0.1
+    opacity: hide ? 0 :
+                    enabled ?
+                        1 :  0.1
 
     Behavior on opacity {
         NumberAnimation { duration: 600 }

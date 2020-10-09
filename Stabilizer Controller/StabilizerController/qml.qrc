@@ -18,5 +18,6 @@
         <file>controls/NeumorphismStyle/Dial/RangedDial.qml</file>
         <file>controls/NeumorphismStyle/CustomLabel.qml</file>
         <file>controls/DoubleText.qml</file>
+        <file>controls/NeumorphismStyle/RangedTumbler.qml</file>
     </qresource>
 </RCC>

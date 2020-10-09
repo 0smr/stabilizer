@@ -15,15 +15,15 @@ import "../controls"
 Item {
     id: control
 
-    property color accent: Qt.hsva (0.6,1,1)
+    property color accent: Qt.hsva (0.6,1,1,0.7)
     property color color: Qt.hsla(0, 0, 0.9)
-    property real defualtButtonWidth: width/6 < 180 ? width/6 : 180
     property bool hide: false
+    property real defualtButtonWidth: width/7 < 180 ? width/7 : 180
 
+    readonly property real defultFontSize: defualtButtonWidth * 0.24
     readonly property alias settingButton : settingButton
     readonly property alias buttonList : settingButton
-
-    signal toggleDarkMode(bool status)
+    readonly property alias darkModeButton: buttonList.darkModeToggleButton
 
     /*
       initialized with an serial port instance.
@@ -31,9 +31,9 @@ Item {
 
     */
 
-//    SerialPort {
-//        id: serialPort
-//    }
+    //    SerialPort {
+    //        id: serialPort
+    //    }
 
     FontLoader {
         id: icoFontRegular
@@ -46,6 +46,7 @@ Item {
 
     ColumnLayout {
         id: mainSection
+
         anchors.fill: parent
 
         Item {
@@ -71,7 +72,7 @@ Item {
 
                     Layout.preferredWidth: defualtButtonWidth
                     Layout.preferredHeight: defualtButtonWidth
-                    Layout.alignment: Qt.AlignTop
+                    Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     Layout.leftMargin: 15
                     Layout.topMargin: 15
                 }
@@ -91,249 +92,210 @@ Item {
             }
         }
 
+        /*!
+         *
+         */
+
+        NEUMDIAL.RangedDial {
+            id: yawAngleController
+
+            enabled: true
+            hide: control.hide
+
+            Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+            Layout.preferredWidth: parent.width * 0.6
+            Layout.preferredHeight: width
+
+            Layout.maximumWidth: 400
+            Layout.maximumHeight: 400
+
+            accent: control.accent
+            background.color: control.color
+            from: -180
+            value: 0
+            to: 180
+            stepSize: 1
+
+            DoubleText {
+                id: yawValueIndicator
+                anchors.centerIn: parent
+                hide: parent.hide
+
+                leftText {
+                    text: yawAngleController.value
+                    color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
+                    font.pixelSize: defultFontSize
+                }
+
+                rightText{
+                    color: control.accent
+                    text: yawAngleController.endValue
+                    font.pixelSize: defultFontSize
+                }
+            }
+        }
+        /*!
+         *
+         */
+
         Item {
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
+            Layout.topMargin:   defualtButtonWidth/2
+            Layout.bottomMargin:defualtButtonWidth/2
 
-            ColumnLayout {
-                id: controllerSection
-                anchors.fill: parent
-                /*!
-                 *
-                 */
-                NEUMDIAL.RangedDial {
-                    id: yawAngleController
+            DoubleText {
+                id: rollValueIndicator
 
-                    enabled: true
-                    hide: control.hide
+                hide: rollAngleController.hide
+                anchors.centerIn: parent
 
-                    Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-                    Layout.preferredWidth: parent.width * 3/5
-                    Layout.preferredHeight: width
-
-                    Layout.maximumWidth: 400
-                    Layout.maximumHeight: 400
-
-                    accent: control.accent
-                    background.color: control.color
-                    from: -180
-                    value: 0
-                    to: 180
-                    stepSize: 1
-
-                    DoubleText {
-                        id: yawValueIndicator
-                        anchors.centerIn: parent
-                        hide: parent.hide
-                        rightText{
-                            color: control.accent
-                            text: yawAngleController.endValue
-                        }
-
-                        leftText {
-                            text: yawAngleController.value
-                            color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
-                        }
-                    }
-                }
-                /*!
-                 *
-                 */
-
-                Item {
-                    Layout.fillWidth: true
-                    Layout.topMargin:20
-                    Layout.bottomMargin:20
-
-                    DoubleText {
-                        id: rollValueIndicator
-
-                        hide: rollAngleController.hide
-                        anchors.centerIn: parent
-
-                        rightText{
-                            text: rollAngleController.value
-                            color: control.accent
-                        }
-
-                        leftText {
-                            text: rollAngleController.value
-                            color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
-                        }
-                    }
+                rightText{
+                    text: rollAngleController.value
+                    color: control.accent
+                    font.pixelSize: defultFontSize
                 }
 
-                Item {
-                    Layout.leftMargin: 10
-                    Layout.rightMargin:10
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 300 + defualtButtonWidth
-                    Layout.preferredHeight: width * 0.4  - 50
-                    Layout.alignment: Qt.AlignHCenter
-
-                    RowLayout {
-                        anchors.fill: parent
-                        NEUM.CircleButton {
-                            Layout.preferredWidth:  defualtButtonWidth/2
-                            Layout.preferredHeight: defualtButtonWidth/2
-                            hide: rollAngleController.hide
-                            background.color: control.color
-                            text.text: '\uea9d'
-                            text.font.family: icoFontRegular.name
-
-                            onClicked: rollAngleController.currentIndex--
-                            onPressAndHoldRpeater: rollAngleController.currentIndex--
-                        }
-
-                        NEUM.CustomTumbler {
-                            id: rollAngleController
-
-                            hide: control.hide
-                            background.color: control.color
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.leftMargin: 10
-                            Layout.rightMargin:10
-                        }
-
-                        NEUM.CircleButton {
-                            Layout.preferredWidth:  defualtButtonWidth/2
-                            Layout.preferredHeight: defualtButtonWidth/2
-                            hide: rollAngleController.hide
-                            background.color: control.color
-                            text.text: '\ueaa0'
-                            text.font.family: icoFontRegular.name
-
-                            onClicked: rollAngleController.currentIndex++
-                            onPressAndHoldRpeater: rollAngleController.currentIndex++
-                        }
-                    }
-                }
-                /*!
-                 *
-                 */
-                Item {
-                    Layout.fillWidth: true
-                    Layout.topMargin:20
-                    Layout.bottomMargin:20
-
-                    DoubleText {
-                        id: pitchValueIndicator
-
-                        anchors.centerIn: parent
-
-                        hide: pitchAngleController.hide
-
-                        rightText{
-                            text: pitchAngleController.value;
-                            color: control.accent
-                        }
-
-                        leftText {
-                            text: pitchAngleController.value
-                            color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
-                        }
-                    }
-                }
-
-                Item {
-                    Layout.leftMargin: 10
-                    Layout.rightMargin:10
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 300 + defualtButtonWidth
-                    Layout.preferredHeight: width * 0.4  - 50
-                    Layout.alignment: Qt.AlignHCenter
-                    RowLayout {
-                        anchors.fill: parent
-                        NEUM.CircleButton {
-                            Layout.preferredWidth: defualtButtonWidth/2
-                            Layout.preferredHeight: defualtButtonWidth/2
-
-                            background.color: control.color
-                            text.text: '\uea9d'
-                            text.font.family: icoFontRegular.name
-                            hide: pitchAngleController.hide
-
-                            onClicked: pitchAngleController.currentIndex--
-                            onPressAndHoldRpeater: pitchAngleController.currentIndex--
-                        }
-
-                        NEUM.CustomTumbler {
-                            id: pitchAngleController
-
-                            hide: control.hide || !footerSection.dockMode
-                            background.color: control.color
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.leftMargin: 10
-                            Layout.rightMargin:10
-                        }
-
-                        NEUM.CircleButton {
-                            Layout.preferredWidth: defualtButtonWidth/2
-                            Layout.preferredHeight: defualtButtonWidth/2
-
-                            background.color: control.color
-                            hide: pitchAngleController.hide
-                            text.text: '\ueaa0'
-                            text.font.family: icoFontRegular.name
-
-                            onClicked: pitchAngleController.currentIndex++
-                            onPressAndHoldRpeater: pitchAngleController.currentIndex++
-                        }
-                    }
+                leftText {
+                    text: rollAngleController.value
+                    color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
+                    font.pixelSize: defultFontSize
                 }
             }
         }
 
         Item {
+            Layout.leftMargin: 10
+            Layout.rightMargin:10
+            Layout.fillWidth: true
+            Layout.preferredHeight: width * 0.25  - 29
+            Layout.alignment: Qt.AlignHCenter
+
+            RowLayout {
+                anchors.fill: parent
+                NEUM.CircleButton {
+                    Layout.preferredWidth:  defualtButtonWidth/2
+                    Layout.preferredHeight: defualtButtonWidth/2
+                    hide: rollAngleController.hide
+                    background.color: control.color
+                    text.text: '\uea9d'
+                    text.font.family: icoFontRegular.name
+
+                    onClicked: rollAngleController.currentIndex--
+                    onPressAndHoldRpeater: rollAngleController.currentIndex--
+                }
+
+                NEUM.RangedTumbler {
+                    id: rollAngleController
+
+                    hide: control.hide
+                    background.color: control.color
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin:10
+                }
+
+                NEUM.CircleButton {
+                    Layout.preferredWidth:  defualtButtonWidth/2
+                    Layout.preferredHeight: defualtButtonWidth/2
+                    hide: rollAngleController.hide
+                    background.color: control.color
+                    text.text: '\ueaa0'
+                    text.font.family: icoFontRegular.name
+
+                    onClicked: rollAngleController.currentIndex++
+                    onPressAndHoldRpeater: rollAngleController.currentIndex++
+                }
+            }
+        }
+        /*!
+                 *
+                 */
+        Item {
+            Layout.fillWidth: true
+            Layout.topMargin:       defualtButtonWidth/2
+            Layout.bottomMargin:    defualtButtonWidth/2
+
+            DoubleText {
+                id: pitchValueIndicator
+
+                anchors.centerIn: parent
+
+                hide: pitchAngleController.hide
+
+                rightText{
+                    text: pitchAngleController.value;
+                    color: control.accent
+                    font.pixelSize: defultFontSize
+                }
+
+                leftText {
+                    text: pitchAngleController.value
+                    color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
+                    font.pixelSize: defultFontSize
+                }
+            }
+        }
+
+        Item {
+            Layout.leftMargin: 10
+            Layout.rightMargin:10
+            Layout.fillWidth: true
+            Layout.maximumWidth: 300 + defualtButtonWidth
+            Layout.preferredHeight: width * 0.25  - 29
+            Layout.alignment: Qt.AlignHCenter
+            RowLayout {
+                anchors.fill: parent
+                NEUM.CircleButton {
+                    Layout.preferredWidth: defualtButtonWidth/2
+                    Layout.preferredHeight: defualtButtonWidth/2
+
+                    background.color: control.color
+                    text.text: '\uea9d'
+                    text.font.family: icoFontRegular.name
+                    hide: pitchAngleController.hide
+
+                    onClicked: pitchAngleController.currentIndex--
+                    onPressAndHoldRpeater: pitchAngleController.currentIndex--
+                }
+
+                NEUM.RangedTumbler {
+                    id: pitchAngleController
+
+                    hide: control.hide //|| !footerSection.dockMode
+                    background.color: control.color
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin:10
+                }
+
+                NEUM.CircleButton {
+                    Layout.preferredWidth: defualtButtonWidth/2
+                    Layout.preferredHeight: defualtButtonWidth/2
+
+                    background.color: control.color
+                    hide: pitchAngleController.hide
+                    text.text: '\ueaa0'
+                    text.font.family: icoFontRegular.name
+
+                    onClicked: pitchAngleController.currentIndex++
+                    onPressAndHoldRpeater: pitchAngleController.currentIndex++
+                }
+            }
+        }
+
+        Item {
+            Layout.fillWidth: true
             Layout.fillHeight: true
         }
 
         Item {
             id: footerSection
 
-            property bool dockMode: true
-            property bool hide: control.hide
-
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignBottom
-
-            state: hide ? 'hide' :
-                    dockMode ? 'dock' : 'show'
-
-            states: [
-                State {
-                    name: "dock"
-                    PropertyChanges {
-                        target: footerSection
-                        Layout.preferredHeight: control.defualtButtonWidth * 1.5 + 10
-                    }
-                },
-                State {
-                    name: "show"
-                    PropertyChanges {
-                        target: footerSection
-                        Layout.preferredHeight: buttonList.grid.height + 30;
-                    }
-                },
-                State {
-                    name: "hide"
-                    PropertyChanges {
-                        target: footerSection
-                        Layout.preferredHeight: 0
-                    }
-                }
-            ]
-
-            transitions:
-                Transition {
-                    NumberAnimation {
-                        properties: 'preferredHeight'
-                        duration: 300
-                    }
-                }
-
+            Layout.preferredHeight: 100
+            Layout.alignment: Qt.AlignBottom | Qt.AlignLeft
 
             CustomPane {
                 id: buttonList
@@ -341,110 +303,26 @@ Item {
                 anchors.fill: parent
                 itemWidth: defualtButtonWidth
                 color: control.color
+                hide: control.hide
 
-                gridView: Grid {
-                    id: buttonsGrid
-                    spacing: defualtButtonWidth / 2
-                    //columns: 3
-                    NEUM.CircleButton {
-                        width: defualtButtonWidth
-                        hide: control.hide
-                        background.color: control.color
-                        text.text: '\uefd1'
-                        text.font.family: icoFontRegular.name
-
-                        onClicked: {
-                            pitchAngleController.resetValue()
-                            rollAngleController.resetValue()
-                            yawAngleController.value = 0;
-                            yawAngleController.endValue = 0;
-                        }
-                    }
-
-                    NEUM.CircleButton {
-                        id: darkModeToggleButton
-
-                        property bool isDarkModeOn : false;
-
-                        width: defualtButtonWidth
-                        hide: control.hide
-                        background.color: control.color
-                        text.text: isDarkModeOn ? '\uef9e': '\uee7e';
-                        text.font.family: icoFontRegular.name
-
-                        onClicked: {
-                            isDarkModeOn = !isDarkModeOn;
-                            control.toggleDarkMode(isDarkModeOn);
-                        }
-                    }
-
-                    NEUM.CircleButton {
-
-                        width: defualtButtonWidth
-                        hide: control.hide
-                        checkable: true
-                        background.color: control.color
-                        text.text: '\uf020'
-                        text.font.family: icoFontRegular.name
-
-                        onClicked: {
-                            checked = !checked
-                            yawValueIndicator.toggle();
-                            yawAngleController.toggle();
-                            pitchValueIndicator.toggle();
-                            rollValueIndicator.toggle();
-                        }
-                    }
-
-                    NEUM.CircleButton {
-
-                        width: defualtButtonWidth
-                        hide: control.hide
-                        //checkable: true
-                        background.color: control.color
-
-                        text {
-                            text: '\ueaa1'
-                            font.family: icoFontRegular.name
-                            Behavior on rotation{
-                                NumberAnimation{}
-                            }
-                        }
-
-                        onClicked: {
-                            checked = !checked;
-                            text.rotation = checked ? -180 : 0;
-                            //rollAngleController.hide   = checked ? true : false;
-                            //pitchAngleController.hide  = checked ? true : false;
-                            footerSection.dockMode = !checked;
-                            yawValueIndicator.state
-                        }
-                    }
-
-                    NEUM.CircleButton {
-                        width: defualtButtonWidth
-                        hide: control.hide
-                        checkable: true
-                        background.color: control.color
-                        text.text: ' '
-                        text.font.family: icoFontRegular.name
-
-                        onClicked: {
-                            checked = !checked
-                        }
-                    }
+                resetButton.onClicked: {
+                    pitchAngleController.resetValue()
+                    rollAngleController.resetValue()
+                    yawAngleController.value = 0;
+                    yawAngleController.endValue = 0;
                 }
-            }
-            DropShadow {
-                anchors {
-                    fill: buttonList
+
+                rangeModeButton.onClicked: {
+                    rangeModeButton.checked = !rangeModeButton.checked
+                    yawValueIndicator.toggle();
+                    yawAngleController.toggle();
+                    pitchValueIndicator.toggle();
+                    rollValueIndicator.toggle();
                 }
-                source: buttonList
-                verticalOffset: -3
-                radius: 10
-                samples: 15
-                color: Qt.hsla (0,0,control.color.hslLightness + 0.1)
-                z:2
+
+                advancedRangeModeButton.onClicked: {
+                    advancedRangeModeButton.checked = !advancedRangeModeButton.checked
+                }
             }
         }
     }

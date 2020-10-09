@@ -11,10 +11,11 @@ Item {
 
     readonly property color lightShadowColor: Qt.hsla(0,0,background.color.hslLightness+0.05)
     readonly property color darkShadowColor: Qt.hsva (0,0,background.color.hsvValue-0.05)
-    readonly property var value: model[currentIndex];
+    readonly property real  value: model[currentIndex];
 
     property bool hide: false;
     property real indicatorHeight: height * 0.6
+    property color tiksColor: '#999'
 
     property alias currentIndex: tumbler.currentIndex
     readonly property alias model: tumbler.model
@@ -75,8 +76,8 @@ Item {
         delegate: Rectangle {
             color: 'Transparent'
             Rectangle {
-                color: index === 180 ? 'red' : '#bbb'
-                width: index % 10 == 0? tumbler.tiksWidth : Math.abs(2 - index % 5) + tumbler.tiksWidth /3
+                color: index === 180 ? 'red' : tiksColor
+                width: index % 10 == 0? tumbler.tiksWidth : tumbler.tiksWidth /3
                 height: 1
 
                 radius: height /2
@@ -124,7 +125,7 @@ Item {
         horizontalOffset: 0
         verticalOffset: shadowOffset
         radius: shadowRadius
-        samples: 17
+        samples: 13
         color: Qt.hsva(0,0,background.color.hsvValue-0.1)
         source: shadow
         transform: Scale {
@@ -141,8 +142,8 @@ Item {
         horizontalOffset: 0
         verticalOffset: -shadowOffset
         radius: shadowRadius
-        samples: 17
-        color: Qt.hsla(0,0,background.color.hslLightness + 0.2)
+        samples: 13
+        color: Qt.hsla(0,0,background.color.hslLightness + 0.1)
         source: shadow
         transform: Scale {
             yScale: shadowScale.yScale

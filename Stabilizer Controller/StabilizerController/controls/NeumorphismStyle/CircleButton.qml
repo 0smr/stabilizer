@@ -64,7 +64,7 @@ Item {
     Rectangle {
         id: checkIndicator
 
-        property real colorOpacity: control.checked
+        property real colorOpacity: control.checked ? 0.7 : 0
 
         x: control.width * 0.65
         y: 5
@@ -176,6 +176,10 @@ Item {
             }
             PropertyChanges {
                 target: lightShadow
+                opacity: 1
+            }
+            PropertyChanges {
+                target: text
                 opacity: 1
             }
         },

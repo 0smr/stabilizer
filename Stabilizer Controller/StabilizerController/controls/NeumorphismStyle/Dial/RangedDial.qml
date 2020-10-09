@@ -9,17 +9,36 @@ Neum.Dial {
 
     property color accent: Qt.hsva (0.6,1,1)
     property bool doubleMode: false
+    property real movementDuration: 1000
 
     property alias endValue: range.value
     property alias endAngle: mouseArea.angle
 
-    readonly property alias endPoint: endPoint
+    readonly property alias secondHandle: endPoint
 
     function toggle() {
         endValue = doubleMode ?  endValue : 0;
         doubleMode = !doubleMode;
     }
 
+
+    function startMovement(duration) {
+
+    }
+
+    function endMovement() {
+
+    }
+
+    handle.lineWidth: 2
+    secondHandle.lineWidth: 2
+
+
+    NumberAnimation {
+        target: control
+        property: "value"
+        duration: control.movementDuration
+    }
 
     RangeModel {
         id: range

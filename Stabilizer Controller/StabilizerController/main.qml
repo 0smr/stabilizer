@@ -10,8 +10,8 @@ ApplicationWindow {
     id: window
     visible: true
 
-    width: 240
-    height: 520
+    width: 352
+    height: 700
 
     title: qsTr("Stabilizer Controller")
     color: Qt.hsla(0, 0, 0.9)
@@ -21,12 +21,15 @@ ApplicationWindow {
         color: window.color
         visible: false
 
+        defualtButtonWidth: width/7 < 150 ? width/7 : 150
+
         settingButton.onClicked: {
             stackView.push(settingPanel)
         }
 
-        onToggleDarkMode: {
-            window.color = status ? Qt.hsla(0, 0, 0.1) : Qt.hsla(0, 0, 0.9)
+        darkModeButton.onClicked: {
+            darkModeButton.checked = !darkModeButton.checked;
+            window.color = darkModeButton.checked ? Qt.hsla(0, 0, 0.1) : Qt.hsla(0, 0, 0.9)
         }
     }
 
@@ -34,11 +37,14 @@ ApplicationWindow {
         id: settingPanel
         visible: false
         color: window.color
+        defualtButtonWidth: width/7 < 150 ? width/7 : 150
 
         backButton.onClicked: {
             stackView.pop()
         }
     }
+
+
 
     StackView {
         id: stackView

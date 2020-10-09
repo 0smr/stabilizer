@@ -50,7 +50,7 @@ Control {
         rotation: angle - 180
         color: Qt.hsva (0,0,1-background.color.hsvValue,0.2)
 
-        lineWidth: 1
+        lineWidth: 1.5
 
         Behavior on opacity {
             NumberAnimation {duration: 600}

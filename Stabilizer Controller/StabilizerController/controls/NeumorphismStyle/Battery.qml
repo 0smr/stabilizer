@@ -61,16 +61,16 @@ Item {
         var j = 0;
 
         for( i = Math.PI/2 ; i <= 5/4 * Math.PI ; i += 0.4) {
-            indicatorList[j].width    = Qt.binding(()=>{ return control.width/10 });
-            indicatorList[j].xRadius  = Qt.binding(()=>{ return control.cx });
-            indicatorList[j].yRadius  = Qt.binding(()=>{ return control.cy });
-            indicatorList[j].rad      = Qt.binding(()=>{ return control.rad });
-            indicatorList[j].enabled  = Qt.binding(()=>{ return control.enabled });
+            indicatorList[j].width      = Qt.binding(()=>{ return control.width/10 });
+            indicatorList[j].xRadius    = Qt.binding(()=>{ return control.cx });
+            indicatorList[j].yRadius    = Qt.binding(()=>{ return control.cy });
+            indicatorList[j].rad        = Qt.binding(()=>{ return control.rad });
+            indicatorList[j].enabled    = Qt.binding(()=>{ return control.enabled });
             indicatorList[j].border.color
-                                      = Qt.binding(()=>{ return Qt.hsva(0,0,1-control.color.hsvValue) });
-            indicatorList[j].angle    = i
+                                        = Qt.binding(()=>{ return Qt.hsva(0,0,1-control.color.hsvValue) });
+            indicatorList[j].hide       = Qt.binding(()=>{ return control.hide });
+            indicatorList[j].angle      = i
             j++;
-
         }
 
         setBatteryValue(0);
