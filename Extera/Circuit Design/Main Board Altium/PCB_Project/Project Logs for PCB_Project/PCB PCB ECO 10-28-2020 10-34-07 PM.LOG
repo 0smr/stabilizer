@@ -1,0 +1,3 @@
+Change Component Designator: OldDesignator= NewDesignator=*
+Change Component Designator: OldDesignator=gy-271 NewDesignator=P14
+Added Pin To Net: NetName=VCC Pin=*-16

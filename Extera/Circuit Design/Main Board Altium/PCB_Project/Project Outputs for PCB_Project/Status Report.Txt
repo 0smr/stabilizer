@@ -1,0 +1,10 @@
+Output: Cadnetix Netlist
+Type  : CadnetixNetlist
+From  : Project [PCB_Project.PrjPcb]
+   Generated File[PCB_Project.NET]
+
+
+Files Generated   : 1
+Documents Printed : 0
+
+Finished Output Generation At 2:51:29 PM On 11/1/2020

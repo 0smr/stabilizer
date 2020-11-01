@@ -1,0 +1,14 @@
+Removed Pin From Net: NetName=sda Pin=AN-20
+Removed Pin From Net: NetName=scl Pin=AN-21
+Change Component Designator: OldDesignator=5v Reg NewDesignator=3.3 Reg
+Change Component Designator: OldDesignator=6vReg NewDesignator=reg 6v
+Change Component Designator: OldDesignator=12v NewDesignator=Battery Input
+Change Component Designator: OldDesignator=14v NewDesignator=Charger Input
+Change Component Designator: OldDesignator=AN NewDesignator=*
+Change Component Designator: OldDesignator=JS NewDesignator=JoyStick
+Change Component Designator: OldDesignator=LEDSt NewDesignator=Power&LedStatus
+Change Component Designator: OldDesignator=PS FET NewDesignator=power switch FET
+Added Pin To Net: NetName=scl Pin=*-24
+Added Pin To Net: NetName=sda Pin=*-25
+Added Member To Class: ClassName=Sheet Member=Component gy 521 Header 6
+Added Room: Name=Sheet
