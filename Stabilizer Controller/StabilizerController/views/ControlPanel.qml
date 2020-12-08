@@ -17,13 +17,14 @@ Item {
 
     property color accent: Qt.hsva (0.6,1,1,0.7)
     property color color: Qt.hsla(0, 0, 0.9)
-    property bool hide: false
-    property real defualtButtonWidth: width/7 < 180 ? width/7 : 180
+    property bool  hide: false
+    property real  defualtButtonWidth: width/7 < 180 ? width/7 : 180
 
     readonly property real defultFontSize: defualtButtonWidth * 0.24
     readonly property alias settingButton : settingButton
     readonly property alias buttonList : settingButton
     readonly property alias darkModeButton: buttonList.darkModeToggleButton
+    readonly property alias aRangeModeButton: buttonList.andvancedRangeModeButton
 
     /*
       initialized with an serial port instance.
@@ -31,9 +32,9 @@ Item {
 
     */
 
-    //    SerialPort {
-    //        id: serialPort
-    //    }
+    //SerialPort {
+    //    id: serialPort
+    //}
 
     FontLoader {
         id: icoFontRegular
@@ -77,6 +78,13 @@ Item {
                     Layout.topMargin: 15
                 }
 
+                TimerStarter {
+                    id: timerInput
+                    Layout.fillWidth: true
+                    color: value != '0' ? control.accent : Qt.hsva (0.9,1,1,0.7)
+                    hide: control.hide || !buttonList.rangeModeButton.checked
+                }
+
                 NEUM.Battery {
                     height: width
                     color: control.color
@@ -118,6 +126,8 @@ Item {
 
             DoubleText {
                 id: yawValueIndicator
+
+                accent: control.accent
                 anchors.centerIn: parent
                 hide: parent.hide
 
@@ -143,22 +153,86 @@ Item {
             Layout.topMargin:   defualtButtonWidth/2
             Layout.bottomMargin:defualtButtonWidth/2
 
+            NEUM.CircleButton {
+                id: timerStarter
+
+                color: control.color
+                hide: control.hide || !buttonList.rangeModeButton.checked
+                text.text: checked? '\uec72':'\uec74'
+                checkable: true
+
+                text.font{
+                    family: icoFontRegular.name
+                    pixelSize: width * 0.4
+                }
+                width: defualtButtonWidth * 0.7
+
+                anchors{
+                    bottom: parent.top
+                    left: parent.left
+                    leftMargin: 10
+                }
+
+                onClicked: {
+                    if (timerInput.value == '0') {
+                        checked =! checked;
+                        timerInput.focus = true;
+                    }
+                    else if (checked) {
+                        var e1 = yawAngleController.startMovement(timerInput.value)
+                        var e2 = rollAngleController.startMovement(timerInput.value);
+                        var e3 = pitchAngleController.startMovement(timerInput.value);
+                        if(e1 || e2 || e3) {
+                            movementTimer.start();
+                        } else {
+                            checked =! checked;
+                        }
+                    }
+                    else {
+                        movementTimer.stop();
+                        yawAngleController.stopMovement();
+                        rollAngleController.stopMovement();
+                        pitchAngleController.stopMovement();
+                    }
+                }
+
+                Timer {
+                    id: movementTimer
+                    interval: timerInput.value + "000"
+                    onTriggered: timerStarter.checked = false;
+                }
+
+                Timer {
+                    interval: 1000
+                    running: movementTimer.running && timerInput.value != '0'
+                    repeat: true
+                    onTriggered: timerInput.value = timerInput.value-1;
+                }
+            }
+
             DoubleText {
                 id: rollValueIndicator
 
+                accent: control.accent
                 hide: rollAngleController.hide
                 anchors.centerIn: parent
+                checkable: true
+                checked: rollAngleController.mode
+
+                leftText {
+                    text: rollAngleController.beginValue
+                    color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
+                    font.pixelSize: defultFontSize
+                }
 
                 rightText{
-                    text: rollAngleController.value
+                    text: rollAngleController.endValue
                     color: control.accent
                     font.pixelSize: defultFontSize
                 }
 
-                leftText {
-                    text: rollAngleController.value
-                    color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
-                    font.pixelSize: defultFontSize
+                onClicked: {
+                    rollAngleController.toggleMode();
                 }
             }
         }
@@ -193,6 +267,8 @@ Item {
                     Layout.fillHeight: true
                     Layout.leftMargin: 10
                     Layout.rightMargin:10
+
+                    ticksColor: !mode ? '#999' : control.accent
                 }
 
                 NEUM.CircleButton {
@@ -209,8 +285,8 @@ Item {
             }
         }
         /*!
-                 *
-                 */
+         *
+         */
         Item {
             Layout.fillWidth: true
             Layout.topMargin:       defualtButtonWidth/2
@@ -220,19 +296,25 @@ Item {
                 id: pitchValueIndicator
 
                 anchors.centerIn: parent
-
+                accent: control.accent
+                checkable: true
+                checked: pitchAngleController.mode
                 hide: pitchAngleController.hide
 
+                leftText {
+                    text: pitchAngleController.beginValue;
+                    color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
+                    font.pixelSize: defultFontSize
+                }
+
                 rightText{
-                    text: pitchAngleController.value;
+                    text: pitchAngleController.endValue
                     color: control.accent
                     font.pixelSize: defultFontSize
                 }
 
-                leftText {
-                    text: pitchAngleController.value
-                    color: Qt.hsva (0,0,1-control.color.hsvValue,0.2)
-                    font.pixelSize: defultFontSize
+                onClicked: {
+                    pitchAngleController.toggleMode();
                 }
             }
         }
@@ -268,6 +350,8 @@ Item {
                     Layout.fillHeight: true
                     Layout.leftMargin: 10
                     Layout.rightMargin:10
+
+                    ticksColor: !mode ? '#999' : control.accent
                 }
 
                 NEUM.CircleButton {
@@ -313,15 +397,14 @@ Item {
                 }
 
                 rangeModeButton.onClicked: {
-                    rangeModeButton.checked = !rangeModeButton.checked
                     yawValueIndicator.toggle();
                     yawAngleController.toggle();
                     pitchValueIndicator.toggle();
                     rollValueIndicator.toggle();
+                    timerInput.activeFocus();
                 }
 
-                advancedRangeModeButton.onClicked: {
-                    advancedRangeModeButton.checked = !advancedRangeModeButton.checked
+                lockPositionButton.onClicked: {
                 }
             }
         }

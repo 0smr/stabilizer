@@ -9,7 +9,9 @@
                 "C:\\Program Files (x86)\\Arduino\\tools\\**",
                 "${workspaceFolder}\\**",
                 "C:\\Users\\seyye\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.7.4\\**",
-                "C:\\Users\\seyye\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**"
+                "C:\\Users\\seyye\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
+                "C:\\Users\\seyye\\Documents\\Arduino\\libraries\\**"
             ],
             "forcedInclude": [
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
@@ -19,7 +21,8 @@
             "cStandard": "c11",
             "cppStandard": "c++11",
             "defines": [
-                "USBCON=1"
+                "USBCON=1",
+                "USBCON"
             ]
         },
         {

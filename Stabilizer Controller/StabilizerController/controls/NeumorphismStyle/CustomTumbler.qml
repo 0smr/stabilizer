@@ -15,7 +15,8 @@ Item {
 
     property bool hide: false;
     property real indicatorHeight: height * 0.6
-    property color tiksColor: '#999'
+    property color ticksColor: '#999'
+    property real instantIndex: 0
 
     property alias currentIndex: tumbler.currentIndex
     readonly property alias model: tumbler.model
@@ -71,12 +72,36 @@ Item {
         height: control.width
 
         model: modelArray
-        currentIndex: 180
         visibleItemCount: 25
+
+        Component.onCompleted: currentIndex = 180
+
+        contentItem: PathView {
+            id: pathView
+            model: tumbler.model
+            delegate: tumbler.delegate
+            clip: true
+            pathItemCount: tumbler.visibleItemCount + 1
+            preferredHighlightBegin: 0.5
+            preferredHighlightEnd: 0.5
+            dragMargin: width / 2
+
+            path: Path {
+                startX: pathView.width / 2
+                startY: -pathView.delegateHeight / 2
+                PathLine {
+                    x: pathView.width / 2
+                    y: pathView.pathItemCount * pathView.delegateHeight - pathView.delegateHeight / 2
+                }
+            }
+
+            property real delegateHeight: tumbler.availableHeight / tumbler.visibleItemCount
+        }
+
         delegate: Rectangle {
             color: 'Transparent'
             Rectangle {
-                color: index === 180 ? 'red' : tiksColor
+                color: index === 180 ? 'red' : ticksColor
                 width: index % 10 == 0? tumbler.tiksWidth : tumbler.tiksWidth /3
                 height: 1
 

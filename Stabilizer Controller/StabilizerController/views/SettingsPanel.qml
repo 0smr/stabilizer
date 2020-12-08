@@ -15,9 +15,10 @@ import "../controls"
 
 Item {
     id: control
+    property color accent: Qt.hsva (0.6,1,1,0.7)
     property color color: Qt.hsla(0, 0, 0.9)
-    property real defualtButtonWidth: width/6 < 180 ? width/6 : 180
-    property bool hide: false
+    property real  defualtButtonWidth: width/6 < 180 ? width/6 : 180
+    property bool  hide: false
 
     readonly property alias backButton : backButton
 

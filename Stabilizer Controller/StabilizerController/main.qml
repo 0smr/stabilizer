@@ -3,15 +3,15 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 import QtQuick.Window 2.1
 
-import 'controls' //as NEUM
+import 'controls/NeumorphismStyle' as NEUM
 import 'views'
 
 ApplicationWindow {
     id: window
     visible: true
 
-    width: 352
-    height: 700
+    width:  300//352
+    height: 600//700
 
     title: qsTr("Stabilizer Controller")
     color: Qt.hsla(0, 0, 0.9)
@@ -31,6 +31,10 @@ ApplicationWindow {
             darkModeButton.checked = !darkModeButton.checked;
             window.color = darkModeButton.checked ? Qt.hsla(0, 0, 0.1) : Qt.hsla(0, 0, 0.9)
         }
+
+        aRangeModeButton.onClicked: {
+            stackView.push(apmp)
+        }
     }
 
     SettingsPanel {
@@ -44,11 +48,18 @@ ApplicationWindow {
         }
     }
 
-
+    AdvancedPathMovePanel {
+        id: apmp
+        visible: false
+        defualtButtonWidth: width/7 < 150 ? width/7 : 150
+        backButton.onClicked: {
+            stackView.pop()
+        }
+    }
 
     StackView {
         id: stackView
-        initialItem: controlPanel
+        initialItem: apmp
         anchors.fill: parent
 
         pushEnter: Transition {

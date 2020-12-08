@@ -30,6 +30,7 @@ namespace Stabilizer
         PITCH_ANGLE,            /** get \a PITCH_ANGLE value (no parameters)     */
         ROLL_ANGLE,             /** get \a ROLL_ANGLE value (no parameters)      */
         YAW_ANGLE,              /** get \a YAW_ANGLE value (no parameters)       */
+        LOCK_POSITION,              /** get \a YAW_ANGLE value (no parameters)       */
 
         /// settings:
         CALIBRATE_STABILIZER = 0x20,

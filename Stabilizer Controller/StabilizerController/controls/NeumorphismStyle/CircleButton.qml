@@ -14,7 +14,7 @@ Item {
     property bool checkable: false
     property bool checked: false
 
-    property alias  accent: checkIndicator.color
+    property alias accent: checkIndicator.color
     property alias color: buttonPlate.color
 
     readonly property alias background: buttonPlate
@@ -26,17 +26,17 @@ Item {
     signal pressAndHold();
     signal pressAndHoldRpeater();
 
-    function toggle() {
-        toggleAnimation.from = 0;
-        toggleAnimation.to = 1;
-        toggleAnimation.start();
-
+    function toggleHide() {
+        hide = !hide
     }
 
-    state: hide ? 'hide' :
-           !enabled ? 'disable' :
-           pressed ? 'press' : 'enable';
+    state:  hide ?    'hide'    :
+            !enabled ?'disable' :
+            pressed ? 'press'   :
+            checked ? 'checked' :
+                      'enable';
 
+    enabled: !hide
     Rectangle {
         id: buttonPlate
 
@@ -121,14 +121,20 @@ Item {
         onPressAndHold: {
             control.pressAndHold()
             timer.start()
-            control.checked = control.checkable ? !control.checked:control.checked
         }
-        onClicked: control.clicked();
+        onPressed: {
+            control.focus = true;
+        }
+
+        onClicked: {
+            control.checked = (control.checkable ? !control.checked:control.checked)
+            control.clicked();
+        }
     }
 
     Timer {
         id: timer
-        interval: 400
+        interval: 200
         onTriggered: {
             control.pressAndHoldRpeater()
             start()
@@ -139,7 +145,7 @@ Item {
     // TODO: change dark and light shadow radius and offset. to make button more responsive.
 
     readonly property real shadowOffset: control.width * 0.03 + 3.33
-    readonly property real shadowRadius: control.width * 0.1 + 7.67
+    readonly property real shadowRadius: control.width * 0.1 + 4.67
     // light shadow
     // position: top left.
     DropShadow {
@@ -148,7 +154,7 @@ Item {
         horizontalOffset: shadowOffset
         verticalOffset: shadowOffset
         radius: shadowRadius
-        samples: 10
+        samples: 7
         color: Qt.hsva(0,0,background.color.hsvValue-0.1)
         source: buttonBorder
     }
@@ -161,7 +167,7 @@ Item {
         horizontalOffset: - shadowOffset
         verticalOffset: - shadowOffset
         radius: shadowRadius
-        samples: 10
+        samples: 7
         color: Qt.hsla(0,0,background.color.hslLightness + 0.1)
         source: buttonBorder
     }
@@ -181,6 +187,25 @@ Item {
             PropertyChanges {
                 target: text
                 opacity: 1
+            }
+        },        State {
+            // this state activated when button is checked and comes with some decreasing in shadows.
+            name: "checked"
+            PropertyChanges {
+                target: darkShadow
+                opacity: 0.7
+            }
+            PropertyChanges {
+                target: lightShadow
+                opacity: 0.7
+            }
+            PropertyChanges {
+                target: text
+                opacity: 0.8
+            }
+            PropertyChanges {
+                target: checkIndicator
+                opacity: 0.8
             }
         },
         State {
@@ -238,6 +263,10 @@ Item {
             }
             PropertyChanges {
                 target: buttonPlate
+                opacity: 0
+            }
+            PropertyChanges {
+                target: checkIndicator
                 opacity: 0
             }
         }

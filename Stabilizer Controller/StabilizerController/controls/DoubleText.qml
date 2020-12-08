@@ -6,11 +6,15 @@ Item {
     readonly property alias leftText: leftText
     readonly property alias rightText:rightText
 
+    property color accent: 'lightblue'
     property real spacing: -rightText.width/2
 
-    property bool switchable : false;
+    property bool checkable : false;
+    property bool checked: false;
     property bool doubleMode : false;
     property bool hide: false;
+
+    signal clicked();
 
     function toggle() {
         doubleMode = !doubleMode
@@ -35,8 +39,33 @@ Item {
         text: '0'
     }
 
+    Rectangle{
+        x: checked ? control.width + 5 : leftText.x - 5
+        y: leftText.height/2-height/2
+        visible: doubleMode && checkable
+        width: 3
+        height: width
+        radius: width/2
+        color: control.accent
+
+        Behavior on x {
+            NumberAnimation {duration: 500; easing.type: Easing.OutBack}
+        }
+    }
+
     Behavior on opacity {
         NumberAnimation { duration: 1000 }
+    }
+
+    MouseArea {
+        id:mousearea
+        anchors.fill: parent
+        enabled: control.doubleMode
+
+        onClicked: {
+            //checked = checkable ? !checked : checked;
+            control.clicked();
+        }
     }
 
     states: [

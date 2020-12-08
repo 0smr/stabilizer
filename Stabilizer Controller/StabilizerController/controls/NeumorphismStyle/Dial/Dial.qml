@@ -18,6 +18,7 @@ Control {
 
     property bool activeFocusOnPress: false
     property bool tickmarksVisible: true
+    property bool enabledMouseArea: true
     property bool hide: false
 
     property alias angle: mouseArea.angle
@@ -70,6 +71,7 @@ Control {
 
         property real angle: 180
 
+        enabled: control.enabledMouseArea
         hoverEnabled: true
         anchors.fill: background
 

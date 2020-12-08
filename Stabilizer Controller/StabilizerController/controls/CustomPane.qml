@@ -14,13 +14,14 @@ Item {
     readonly property alias resetButton: resetButton
     readonly property alias darkModeToggleButton: darkModeToggleButton
     readonly property alias rangeModeButton: rangeModeButton
-    readonly property alias advancedRangeModeButton: advancedRangeModeButton
+    readonly property alias lockPositionButton: lockPositionButton
+    readonly property alias andvancedRangeModeButton: andvancedRangeModeButton
 
-//    clip: true
-//    background: Rectangle {
-//        id: back
-//        color: control.color
-//    }
+    //    clip: true
+    //    background: Rectangle {
+    //        id: back
+    //        color: control.color
+    //    }
 
     FontLoader {
         id: icoFontRegular
@@ -31,78 +32,83 @@ Item {
         source: 'qrc:/resources/fonts/DS-DIGI.TTF'
     }
 
-    //    Column {
-    //        anchors.fill: parent
+    Flickable {
+        id: scroll
 
-    //        Flickable {
-    //            id: scroll
+        topMargin: 18
+        width: parent.width
+        height: parent.height
 
-    //            topMargin: 18
-    //            width: parent.width
-    //            height: parent.height
+        ScrollBar.horizontal: ScrollBar { }
 
-    //            ScrollBar.vertical: ScrollBar { }
+        //interactive: false
+        flickableDirection: Qt.Horizontal
 
-    //            //interactive: false
-    //            flickableDirection: Qt.Vertical
-
-    //            contentWidth: width
-    //            contentHeight: grid.height
+        contentWidth: width
+        contentHeight: buttonsGrid.height
 
 
-    Item {
-        anchors.centerIn: parent
+        Item {
+            anchors.centerIn: parent
 
-        width: buttonsGrid.width
-        height: buttonsGrid.height
+            width: buttonsGrid.width
+            height: buttonsGrid.height
 
-        Grid {
-            id: buttonsGrid
-            spacing: defualtButtonWidth / 2
-            //columns: 3
-            NEUM.CircleButton {
-                id: resetButton
-                width: defualtButtonWidth
-                hide: control.hide
-                background.color: control.color
-                text.text: '\uefd1'
-                text.font.family: icoFontRegular.name
-            }
+            Row {
+                id: buttonsGrid
+                spacing: defualtButtonWidth / 2
+                NEUM.CircleButton {
+                    id: resetButton
+                    width: defualtButtonWidth
+                    hide: control.hide
+                    background.color: control.color
+                    text.text: '\uefd1'
+                    text.font.family: icoFontRegular.name
+                }
 
-            NEUM.CircleButton {
-                id: darkModeToggleButton
+                NEUM.CircleButton {
+                    id: darkModeToggleButton
 
-                width: defualtButtonWidth
-                hide: control.hide
-                background.color: control.color
-                text.text: checked ? '\uef9e': '\uee7e';
-                text.font.family: icoFontRegular.name
-            }
+                    width: defualtButtonWidth
+                    hide: control.hide
+                    background.color: control.color
+                    text.text: checked ? '\uef9e': '\uee7e';
+                    text.font.family: icoFontRegular.name
+                }
 
-            NEUM.CircleButton {
-                id: rangeModeButton
+                NEUM.CircleButton {
+                    id: rangeModeButton
 
-                width: defualtButtonWidth
-                hide: control.hide
-                checkable: true
-                background.color: control.color
-                text.text: '\uf020'
-                text.font.family: icoFontRegular.name
-            }
+                    width: defualtButtonWidth
+                    hide: control.hide
+                    checkable: true
+                    background.color: control.color
+                    text.text: '\uef0c'
+                    text.font.family: icoFontRegular.name
+                }
 
-            NEUM.CircleButton {
-                id: advancedRangeModeButton
+                NEUM.CircleButton {
+                    id: lockPositionButton
 
-                width: defualtButtonWidth
-                hide: control.hide
-                checkable: true
-                background.color: control.color
-                text.text: '\uf02f'
-                text.font.family: icoFontRegular.name
+                    width: defualtButtonWidth
+                    hide: control.hide
+                    checkable: true
+                    background.color: control.color
+                    text.text: checked ? '\uef7a': '\uf01a';
+                    text.font.family: icoFontRegular.name
+                }
+
+                NEUM.CircleButton {
+                    id: andvancedRangeModeButton
+
+                    width: defualtButtonWidth
+                    hide: control.hide
+                    background.color: control.color
+                    text.text: '\uf020'
+                    text.font.family: icoFontRegular.name
+                }
             }
         }
-    }
 
-    //        }
-    //    }
+    }
 }

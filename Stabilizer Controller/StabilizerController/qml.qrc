@@ -19,5 +19,11 @@
         <file>controls/NeumorphismStyle/CustomLabel.qml</file>
         <file>controls/DoubleText.qml</file>
         <file>controls/NeumorphismStyle/RangedTumbler.qml</file>
+        <file>controls/TimerStarter.qml</file>
+        <file>views/AdvancedPathMovePanel.qml</file>
+        <file>resources/model/StabilizerModel.qml</file>
+        <file>resources/model/meshes/pitchHandle.mesh</file>
+        <file>resources/model/meshes/rollHandle.mesh</file>
+        <file>resources/model/meshes/yawHandle.mesh</file>
     </qresource>
 </RCC>

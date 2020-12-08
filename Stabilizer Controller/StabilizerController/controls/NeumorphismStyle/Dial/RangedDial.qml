@@ -17,17 +17,25 @@ Neum.Dial {
     readonly property alias secondHandle: endPoint
 
     function toggle() {
-        endValue = doubleMode ?  endValue : 0;
+        //endValue = doubleMode ?  endValue : 0;
         doubleMode = !doubleMode;
     }
 
 
     function startMovement(duration) {
-
+        if (value != endValue) {
+            movementDuration = duration + "000";
+            movementAnimation.start();
+            mouseArea.enabled = false;
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    function endMovement() {
-
+    function stopMovement() {
+        movementAnimation.stop();
     }
 
     handle.lineWidth: 2
@@ -35,9 +43,15 @@ Neum.Dial {
 
 
     NumberAnimation {
+        id: movementAnimation
         target: control
         property: "value"
         duration: control.movementDuration
+        from: value;
+        to: endValue;
+        onStopped: {
+            mouseArea.enabled = true
+        }
     }
 
     RangeModel {
@@ -59,7 +73,8 @@ Neum.Dial {
 
         rotation: control.endAngle - 180
 
-        state: doubleMode ? 'double' : 'single'
+        state: hide ? 'hide' :
+               doubleMode ? 'double' : 'single'
 
         states: [
             State {
@@ -85,22 +100,43 @@ Neum.Dial {
                     target: mouseArea
                     enabled: true
                 }
+            },
+            State {
+                name: "hide"
+                PropertyChanges {
+                    target: endPoint
+                    opacity: 0
+                }
+                PropertyChanges {
+                    target: mouseArea
+                    enabled: false
+                }
             }
         ]
 
-        transitions:
+        transitions:[
             Transition {
-            SequentialAnimation {
-                NumberAnimation {
-                    property: "opacity"
-                    duration: 500
+                SequentialAnimation {
+                    NumberAnimation {
+                        property: "opacity"
+                        duration: 500
+                    }
+                    NumberAnimation {
+                        property: "width"
+                        duration: 500
+                    }
                 }
-                NumberAnimation {
-                    property: "width"
-                    duration: 500
+            },
+            Transition {
+                to: 'hide'
+                SequentialAnimation {
+                    NumberAnimation {
+                        property: "opacity"
+                        duration: 700
+                    }
                 }
             }
-        }
+        ]
     }
 
     MouseArea {
