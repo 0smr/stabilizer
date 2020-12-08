@@ -1,4 +1,4 @@
-# Writing all output to: C:\Users\seyye\Desktop\New folder\stabilizer main board.log
+# Writing all output to: C:\Users\seyye\Desktop\Stabilizer\Extera\Circuit Design\Main Board\stabilizer main board.log
 set pad_wire_necking on
 bus diagonal
 fanout 5
