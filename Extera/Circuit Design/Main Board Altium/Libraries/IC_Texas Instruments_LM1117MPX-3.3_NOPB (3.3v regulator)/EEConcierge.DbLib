@@ -1,0 +1,47 @@
+[OutputDatabaseLinkFile]
+Version=1.1
+[DatabaseLinks]
+ConnectionString=Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\seyye\Desktop\Stabilizer\Extera\Circuit Design\Main Board Altium\IC_Texas Instruments_LM1117MPX-3.3_NOPB\db.xlsx;Extended Properties="Excel 12.0 Xml;HDR=Yes;IMEX=1"
+AddMode=3
+RemoveMode=1
+UpdateMode=2
+ViewMode=1
+LeftQuote=[
+RightQuote=]
+QuoteTableNames=1
+UseTableSchemaName=0
+DefaultColumnType=VARCHAR(255)
+LibraryDatabaseType=Microsoft Excel 2007
+LibraryDatabasePath=db.xlsx
+DatabasePathRelative=1
+TopPanelCollapsed=1
+LibrarySearchPath=
+OrcadMultiValueDelimiter=,
+SearchSubDirectories=0
+SchemaName=
+LastFocusedTable=Upverter$
+[Table1]
+SchemaName=
+TableName=Upverter$
+Enabled=True
+UserWhere=0
+UserWhereText=[Part Number] = '{Part Number}'
+BrowserOrder_Sorting=
+BrowserOrder_Grouping=
+BrowserOrder_Visible=Part Number0=412|Library Ref0=360|Library Path0=792|Footprint Ref0=570|Footprint Path0=820|Description0=457|Footprint Path10=820|Footprint Ref10=570|Datasheet Path0=824|Capacitance0=194|ComponentLink1Description0=397|ComponentLink1URL0=690|ComponentLink2Description0=397|ComponentLink2URL0=562|Datasheet Path10=824|Digikey Description0=457|Digikey Part Number0=388|Inductance0=181|Lead Free0=166|Library Path10=792|Library Ref10=304|Manufacturer0=239|Mouser Part Number0=338|Package0=148|Price0=217|Resistance0=176|RoHS0=114|Supplier 10=171|Supplier 20=171|Supplier Part Number 10=388|Supplier Part Number 20=338|Temperature0=205|Temperature Range High0=358|Temperature Range Low0=348|Value0=115|Voltage0=140|helpURL0=690
+[FieldMap1]
+Options=FieldName=Upverter$.Part Number|TableNameOnly=Upverter$|FieldNameOnly=Part Number|FieldType=0|ParameterName=Part Number|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
+[FieldMap2]
+Options=FieldName=Upverter$.Library Ref|TableNameOnly=Upverter$|FieldNameOnly=Library Ref|FieldType=1|ParameterName=[Library Ref]|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
+[FieldMap3]
+Options=FieldName=Upverter$.Library Path|TableNameOnly=Upverter$|FieldNameOnly=Library Path|FieldType=1|ParameterName=[Library Path]|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
+[FieldMap4]
+Options=FieldName=Upverter$.Footprint Ref|TableNameOnly=Upverter$|FieldNameOnly=Footprint Ref|FieldType=1|ParameterName=[Footprint Ref]|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
+[FieldMap5]
+Options=FieldName=Upverter$.Footprint Path|TableNameOnly=Upverter$|FieldNameOnly=Footprint Path|FieldType=1|ParameterName=[Footprint Path]|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
+[FieldMap6]
+Options=FieldName=Upverter$.Description|TableNameOnly=Upverter$|FieldNameOnly=Description|FieldType=1|ParameterName=[Description]|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
+[FieldMap7]
+Options=FieldName=Upverter$.Footprint Path1|TableNameOnly=Upverter$|FieldNameOnly=Footprint Path1|FieldType=1|ParameterName=[Footprint Path1]|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
+[FieldMap8]
+Options=FieldName=Upverter$.Footprint Ref1|TableNameOnly=Upverter$|FieldNameOnly=Footprint Ref1|FieldType=1|ParameterName=[Footprint Ref1]|VisibleOnAdd=False|AddMode=0|RemoveMode=0|UpdateMode=0
