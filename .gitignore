@@ -1,3 +1,10 @@
 # build-directories
 */build-*
+
+# android keystore
 */android_release.keystore
+
+# circuit design
+*/__Previews/
+**/History/
+**/__Previews
