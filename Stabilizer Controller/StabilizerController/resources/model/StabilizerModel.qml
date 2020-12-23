@@ -1,12 +1,24 @@
 import QtQuick3D 1.15
 import QtQuick 2.15
+import QtQuick.Scene3D 2.0
+//import Qt3D.Core 2.0
+import Qt3D.Render 2.0
+import Qt3D.Input 2.0
+import Qt3D.Extras 2.0
 
 Node {
     id: scene
-    eulerRotation.x: -0
+
+    property real x:0;
+    property real y:0;
+    property real z:0;
+
+    eulerRotation.z: z
 
     Model {
         id: rollHandle
+        eulerRotation.x: scene.x
+        eulerRotation.y: scene.y
         eulerRotation.z: -180
         scale.x: 1.1
         scale.y: 1.1
@@ -24,10 +36,10 @@ Node {
 
     Model {
         id: pitchHandle
-        y: 2.38419e-07
-        z: -1.86265e-09
+        y: 0
+        z: 0
         eulerRotation.z: -180
-        eulerRotation.y: -180
+        eulerRotation.y: -180 + scene.y
         scale.x: 7.5
         scale.y: 7.5
         scale.z: 8
@@ -39,6 +51,7 @@ Node {
 
     Model {
         id: yawHandle
+        eulerRotation.x: 0
         eulerRotation.y: -90
         eulerRotation.z: -180
         scale.x: 10
@@ -49,4 +62,5 @@ Node {
             material_material
         ]
     }
+
 }

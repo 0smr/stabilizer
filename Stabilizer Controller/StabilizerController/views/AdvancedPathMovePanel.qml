@@ -110,7 +110,7 @@ Item {
                 PerspectiveCamera {
                     id: camera
                     y: -40
-                    z: -15
+                    z: -18
                     eulerRotation.x: 115
                     eulerRotation.z: 180
                     clipNear: 0.1
