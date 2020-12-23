@@ -69,7 +69,7 @@ Item {
             indicatorList[j].border.color
                                         = Qt.binding(()=>{ return Qt.hsva(0,0,1-control.color.hsvValue) });
             indicatorList[j].hide       = Qt.binding(()=>{ return control.hide });
-            indicatorList[j].angle      = i
+            indicatorList[j].angle      = i;
             j++;
         }
 
