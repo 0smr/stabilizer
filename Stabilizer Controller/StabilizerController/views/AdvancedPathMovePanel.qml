@@ -12,17 +12,17 @@ import QtQuick3D 1.15
 import io.stabilizer.opcode 1.0
 import io.stabilizer.serialPort 1.0
 
-import "../controls/NeumorphismStyle/Dial" as NeumDial
-import "../controls/NeumorphismStyle" as Neum
+import "../controls/NeumorphismStyle/Dial" as NEUMDIAL
+import "../controls/NeumorphismStyle" as NEUM
 import "../resources/model" as MODEL
-import "../controls"
+import "../controls" as CTRLS
 
 Item {
     id: control
     property color accent: Qt.hsva (0.6,1,1,0.7)
     property color color: Qt.hsla(0, 0, 0.9)
-    property real  defualtButtonWidth: width/6 < 180 ? width/6 : 180
     property bool  hide: false
+    property real  defualtButtonWidth: width/6 < 180 ? width/6 : 180
 
     //    readonly property alias backButton : backButton
     readonly property alias backButton : backButton
@@ -53,7 +53,7 @@ Item {
                      *
                      */
 
-                Neum.CircleButton {
+                NEUM.CircleButton {
                     id: backButton
 
                     height: width
@@ -79,7 +79,7 @@ Item {
             height: 200
 
             Rectangle {
-                anchors.fill: parent;border.color: 'red';
+                anchors.fill: parent;border.color: 'gray';
                 radius: width/2
                 color: 'Transparent'
             }
@@ -88,7 +88,7 @@ Item {
             View3D {
                 id: view
                 anchors.fill: parent
-                renderMode: View3D.Overlay
+                renderMode: View3D.Offscreen
                 camera: camera
 
                 DirectionalLight {
@@ -121,12 +121,15 @@ Item {
 
                 MODEL.StabilizerModel {
                     id: stabilizerModel
+                    x: xController.value
+                    y: yController.value
+                    z: zController.value
                 }
             }
         }
 
 
-        Rectangle {
+        Item {
             Layout.fillWidth: true
             height: 150
 
@@ -134,14 +137,41 @@ Item {
                 id: controls
                 anchors.fill: parent
 
-                Slider {
-                    Layout.fillWidth:true
+                CTRLS.CustomMultiRangeSlider {
+                    id: xController
+
+                    Layout.fillWidth:       true;
+                    Layout.leftMargin:      10;
+                    Layout.rightMargin:     10;
+                    Layout.bottomMargin:    10;
+                    height:     20;
+                    from:       -180;
+                    to:         +180;
+                    stepSize:   1;
                 }
-                Slider {
-                    Layout.fillWidth:true
+                CTRLS.CustomMultiRangeSlider {
+                    id: yController
+
+                    Layout.fillWidth:       true;
+                    Layout.leftMargin:      10;
+                    Layout.rightMargin:     10;
+                    Layout.bottomMargin:    10;
+                    height:     20;
+                    from:       -180;
+                    to:         +180;
+                    stepSize:   1;
                 }
-                Slider {
-                    Layout.fillWidth:true
+                CTRLS.CustomMultiRangeSlider {
+                    id: zController
+
+                    Layout.fillWidth:       true;
+                    Layout.leftMargin:      10;
+                    Layout.rightMargin:     10;
+                    Layout.bottomMargin:    10;
+                    height:     20;
+                    from:       -180;
+                    to:         +180;
+                    stepSize:   1;
                 }
             }
         }
@@ -149,6 +179,67 @@ Item {
         Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
+        }
+        Item {
+            //Layout.fillHeight: true
+            Layout.fillWidth: true
+            height: 100
+
+            RowLayout {
+                anchors.fill: parent
+
+                NEUM.CircleButton {
+                    Layout.preferredWidth: defualtButtonWidth
+                    Layout.preferredHeight: defualtButtonWidth
+                    Layout.alignment: Qt.AlignCenter
+
+                    background.color: control.color
+                    hide: control.hide
+                    text.text: '\uefc2'
+                    text.font.family: icoFontRegular.name
+
+                    onClicked: {
+                        xController.setPoint();
+                        yController.setPoint();
+                        zController.setPoint();
+                    }
+                }
+                NEUM.CircleButton {
+                    Layout.preferredWidth: defualtButtonWidth
+                    Layout.preferredHeight: defualtButtonWidth
+                    Layout.alignment: Qt.AlignCenter
+
+                    background.color: control.color
+                    hide: control.hide
+                    text.text: '\uea69'
+                    text.font.family: icoFontRegular.name
+
+                    onClicked: {
+                        xController.startMovement();
+                        yController.startMovement();
+                        zController.startMovement();
+                    }
+                }
+                NEUM.CircleButton {
+                    Layout.preferredWidth: defualtButtonWidth
+                    Layout.preferredHeight: defualtButtonWidth
+                    Layout.alignment: Qt.AlignCenter
+
+                    background.color: control.color
+                    hide: control.hide
+                    text.text: '\uefd1'
+                    text.font.family: icoFontRegular.name
+
+                    onClicked: {
+                        xController.reset();
+                        yController.reset();
+                        zController.reset();
+                        xController.value = 0;
+                        yController.value = 0;
+                        zController.value = 0;
+                    }
+                }
+            }
         }
     }
 }

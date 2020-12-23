@@ -4,14 +4,15 @@ import QtQuick.Layouts 1.12
 import QtQuick.Window 2.1
 
 import 'controls/NeumorphismStyle' as NEUM
+import 'controls' as CTRLS
 import 'views'
 
 ApplicationWindow {
     id: window
     visible: true
 
-    width:  300//352
-    height: 600//700
+    width:  352
+    height: 700
 
     title: qsTr("Stabilizer Controller")
     color: Qt.hsla(0, 0, 0.9)
@@ -51,6 +52,7 @@ ApplicationWindow {
     AdvancedPathMovePanel {
         id: apmp
         visible: false
+        color: window.color
         defualtButtonWidth: width/7 < 150 ? width/7 : 150
         backButton.onClicked: {
             stackView.pop()
@@ -59,7 +61,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        initialItem: apmp
+        initialItem: controlPanel
         anchors.fill: parent
 
         pushEnter: Transition {

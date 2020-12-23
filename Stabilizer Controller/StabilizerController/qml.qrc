@@ -25,5 +25,8 @@
         <file>resources/model/meshes/pitchHandle.mesh</file>
         <file>resources/model/meshes/rollHandle.mesh</file>
         <file>resources/model/meshes/yawHandle.mesh</file>
+        <file>controls/CustomMultiRangeSlider.qml</file>
+        <file>views/VirtualJoystickView.qml</file>
+        <file>controls/RangeHandle.qml</file>
     </qresource>
 </RCC>
