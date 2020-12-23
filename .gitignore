@@ -8,3 +8,14 @@
 */__Previews/
 **/History/
 **/__Previews
+
+#documents
+**/Document/*.aux
+**/Document/*.bbl
+**/Document/*.blg
+**/Document/*.lof
+**/Document/*.log
+**/Document/*.nlo
+**/Document/*.out
+**/Document/*.synctex.gz
+**/Document/*.toc

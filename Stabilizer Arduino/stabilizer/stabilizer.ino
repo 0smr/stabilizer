@@ -72,7 +72,7 @@ void setup() {
     Wire.write(0x00);                  // Make reset - place a 0 into the 6B register
     Wire.endTransmission(true);        // end the transmission
 
-    /**
+    /*
     ! unused code (configure ACCEL):
     * Configure Accelerometer Sensitivity - Full Scale Range (default +/- 2g)
     * Wire.beginTransmission(MPU);
@@ -183,7 +183,7 @@ void loop() {
     auto yButton = analogRead(JSTICK_YAW_PIN);
     auto pButton = analogRead(JSTICK_PITCH_PIN) ;
 
-    /**
+    /*!
      * read yaw and pitch axis of joystick and set to \a yButton and \a pButton.
      * middle number is 500 value must have at least 50 distance to 50.
      * and it minus 500 and divide to 1200 (experimental choice).
