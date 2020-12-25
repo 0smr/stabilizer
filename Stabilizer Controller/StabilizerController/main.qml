@@ -89,6 +89,16 @@ ApplicationWindow {
         }
 
         pushExit: popExit
-        popEnter: pushEnter
+        popEnter: Transition {
+            SequentialAnimation {
+                PauseAnimation {
+                    duration: 700
+                }
+                PropertyAction {
+                    properties: 'hide'
+                    value: false
+                }
+            }
+        }
     }
 }

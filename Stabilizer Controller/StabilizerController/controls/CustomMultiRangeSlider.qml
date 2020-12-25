@@ -86,6 +86,19 @@ Control{
         }
     }
 
+    NumberAnimation {
+        id: valueNumAnim
+        target:     control
+        property:   'value'
+        duration:   200
+        from:       0
+        to:         0
+
+        onStopped: {
+            startMovement();
+        }
+    }
+
     property real i: 0
     property real j: 0
 
@@ -121,19 +134,5 @@ Control{
         valueNumAnim.start();
         j++;
         return true;
-    }
-
-
-    NumberAnimation {
-        id: valueNumAnim
-        target:     control
-        property:   'value'
-        duration:   200
-        from:       0
-        to:         0
-
-        onStopped: {
-            startMovement();
-        }
     }
 }

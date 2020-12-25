@@ -188,6 +188,10 @@ Item {
                 target: text
                 opacity: 1
             }
+            PropertyChanges {
+                target: buttonPlate
+                opacity: 1
+            }
         },        State {
             // this state activated when button is checked and comes with some decreasing in shadows.
             name: "checked"
